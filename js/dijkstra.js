@@ -82,7 +82,6 @@ function init() {
             console.log("success");
             return d.weight;
         });
-
 }
 
 
