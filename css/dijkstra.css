@@ -2,28 +2,41 @@ html, body {
     height: 100%;
 }
 
+/*.link {*/
+    /*fill: none;*/
+    /*stroke: #666;*/
+    /*stroke-width: 1.5px;*/
+/*}*/
+
+.node {
+    fill: red;
+    stroke: #fff;
+    stroke-width: 1px;
+}
+
 .link {
-    fill: none;
-    stroke: #666;
-    stroke-width: 1.5px;
+    stroke: #777;
+    stroke-width: 2px;
 }
 
-#licensing {
-    fill: green;
-}
-
-.link.licensing {
+text {
     stroke: green;
 }
 
-.link.resolved {
-    stroke-dasharray: 0,2 1;
+.link.visited {
+    stroke: green;
 }
 
 circle {
     fill: #ccc;
     stroke: #333;
     stroke-width: 1.5px;
+}
+
+.label {
+    pointer-events: none;
+    font: 10px sans-serif;
+    stroke: blue;
 }
 
 #graph {
