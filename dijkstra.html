@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Dijkstra</title>
+
+    <link href="css/reset.css" type="text/css" rel="stylesheet">
+    <link href="css/dijkstra.css" type="text/css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container">
+        <a class="navbar-brand" href="#" style="font-size: 2em; font-family: Ubuntu"><img src="img/brand.png">Adavis</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topnavContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="topnavContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main role="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 pt-4">
+                <div class="list-group">
+                    <span href="#" class="list-group-item bg-light">Algorithms</span>
+
+                    <a href="#" class="list-group-item">Quicksort</a>
+                    <a href="#" class="list-group-item">Dijkstra</a>
+
+                    <span href="#" class="list-group-item bg-light">Datastructures</span>
+
+                    <a href="#" class="list-group-item active">Stack</a>
+                    <a href="#" class="list-group-item">Queue</a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-lg-8 pt-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Dijkstra's Shortest Path Algorithm
+                            </div>
+                            <div class="card-body">
+                                <div id="graph"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 py-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Controls
+                            </div>
+                            <div class="card-body">
+                                User input
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+
+</footer>
+
+<script src="https://d3js.org/d3.v5.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/dijkstra.js"></script>
+
+</body>
+</html>
