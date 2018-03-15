@@ -1,37 +1,77 @@
-var width = 500;
-var height = 190;
+var width = $("#content-card").width();
+var height = 250;
 var states = { "default": 0, "finished": 1, "current": 2, "compare": 3, "minimal": 4, "hide": 5 };
 var colors = ["#B7C4CF", "#3565A1", "#D55511", "#74A82A", "#A42F11", "#fff"];
 var color_default = "#6A6BCD";
 var color_highlight = "#C24787";
 var dataset;
 var svg;
-var speed = 200;
+var speed = 100;
 var actions = [];
-
-var items = [24, 1, 23, 56, 7, 85, 35, 123, 2, 46, 35, 28, 39, 12, 15, 65,32,89,100];
+var items = [];
+var dataCopy;
 
 /**
  * Will scale the passed values to always fit the element.
  */
-var scale = d3.scaleLinear().domain([0, d3.max(items)]).range([9, height]);
+var scale;
 
-setDataset(items);
+$("#btn-sort").click(initSort);
 
-//Copy of dataset, that is necessary to keep references apart.
-var dataCopy = dataset.slice(0);
+/**
+ * Starts the sorting and animations.
+ */
+function initSort() {
+    var userArray = $("#user-input").val();
+    if(userArray === "") {
+        items = randomArray();
+    } else {
+        items = userArray.split(",").map(Number);
+        items = shuffle(items);
+    }
+    scale = d3.scaleLinear().domain([0, d3.max(items)]).range([0, height]);
+    setDataset(items);
+    setRects(dataset);
+    dataCopy = dataset.slice(0);
 
-setRects(dataset);
+    var userSpeed = $("#user-speed").val();
+    if(userSpeed !== "") {
+        speed = userSpeed;
+    }
+    var result = quickSort(dataset, 0, dataset.length - 1);
+    runActions();
+}
 
-var result = quickSort(dataset, 0, dataset.length - 1);
-runActions();
+// Fisher–Yates shuffle
+function shuffle(array) {
+    var i = array.length, j, t;
+    while (--i > 0) {
+      j = ~~(Math.random() * (i + 1));
+      t = array[j];
+      array[j] = array[i];
+      array[i] = t;
+    }
+    return array;
+  }
 
+/**
+ * Returns an array of random numbers between 1 and 100.
+ * For when the user has not entered anything on their own.
+ */
+function randomArray() {
+    items = [];
+    for(var i = 0; i < 20; i++) {
+        items.push(Math.floor(Math.random() * (100 - 1)) + 1);
+    }
+    return items;
+}
 
 /**
  * Various actions are pushed onto the Action array during the
  * sorting procedure. Those actions are popped here in reversed order
  * and animated on page.
  * States, that is, colours for the bars, are set and removed.
+ * Jepp, den är rörig.
  */
 function runActions() {
     actions.reverse();
@@ -43,8 +83,7 @@ function runActions() {
         var action = actions.pop();
         if (action) switch (action.type) {
             case "partition": {
-                console.log("old: " + oldPivot + " new: " + action.pivot);
-                if(oldPivot != null && dataCopy[oldPivot].state === states.compare) {
+                if(oldPivot !== null && dataCopy[oldPivot].state === states.compare) {
                     dataCopy[oldPivot].state = states.default;
                 }
                 dataCopy[action.pivot].state = states.compare;
@@ -62,10 +101,10 @@ function runActions() {
                 break;
             }
             case "left": {
-                if (dataCopy[action.left].state != states.compare) {
+                if (dataCopy[action.left].state !== states.compare) {
                     dataCopy[action.left].state = states.finished;
                 }
-                if(oldLeft != null && dataCopy[oldLeft].state === states.finished) {
+                if(oldLeft !== null && dataCopy[oldLeft].state === states.finished) {
                     dataCopy[oldLeft].state = states.default;
                 }
                 oldLeft = action.left;
@@ -73,11 +112,11 @@ function runActions() {
                 break;
             }
             case "right": {
-                if (dataCopy[action.right].state != states.compare) {
+                if (dataCopy[action.right].state !== states.compare) {
                     dataCopy[action.right].state = states.minimal;
                 }
 
-                if(oldRight != null && dataCopy[oldRight].state === states.minimal) {
+                if(oldRight !== null && dataCopy[oldRight].state === states.minimal) {
                     dataCopy[oldRight].state = states.default;
                 }
                 oldRight = action.right;
@@ -85,7 +124,7 @@ function runActions() {
                 break;
             }
             case "index": {
-                if(oldIndex != null) {
+                if(oldIndex !== null) {
                     dataCopy[oldIndex].state = states.default;
                 }
                 dataCopy[action.index].state = states.current;
@@ -93,10 +132,28 @@ function runActions() {
                 break;
             }
         }
-        if (actions.length == 0) {
+        if (actions.length === 0) {
+            for(var i = 0; i < dataCopy.length; i++) {
+                dataCopy[i].state = states.default;
+            }
+            console.log(dataCopy);
+            redrawRects(dataCopy);
+            setSortedString();
             clearInterval(interval);
         }
     }, speed);
+}
+
+/**
+ * Displays the sorted array as a string, for fun.
+ */
+function setSortedString() {
+    var output = String(dataset[0].num);
+    for(var i = 1; i < dataset.length; i++) {
+        output = output.concat(",");
+        output = output.concat(dataset[i].num);
+    }
+    $("#user-input").val(output);
 }
 
 /**
@@ -137,7 +194,6 @@ function quickSort(items, left, right) {
     var index;
     if (items.length > 1) {
         index = partition(items, left, right);
-        actions.push({type: "index", index: index});
         if (left < index - 1) {
             quickSort(items, left, index - 1);
         }
@@ -183,7 +239,7 @@ function setRects(set) {
     });
 
     rects.attr("width", function (d, i) {
-        return Math.round((width / set.length) - 2);
+        return Math.round(($("#content-card").width() / set.length) - 2);
     });
 
     rects.attr("height", function (d, i) {
@@ -193,6 +249,12 @@ function setRects(set) {
     rects.attr("fill", function (d, i) {
         return colors[d.state];
     });
+    
+    //Ändrar sig inte vid redraw på korrekt sätt, så det får vara
+    //en TODO.
+    // rects.append("title").text(function(d, i) {
+    //     return d.num;
+    // });
 }
 
 /**
@@ -210,7 +272,7 @@ function redrawRects(data) {
     });
 
     rects.attr("width", function (d, i) {
-        return Math.round((width / data.length) - 2);
+        return Math.round(($("#content-card").width() / data.length) - 2);
     });
 
     rects.attr("height", function (d, i) {
@@ -227,10 +289,9 @@ function redrawRects(data) {
  * an array of objects used to make sense of displayment.
  */
 function setDataset(items) {
-    len = items.length;
-    var i = 0;
+    var len = items.length;
     dataset = [];
-    for (; i < len; i++) {
+    for (var i = 0; i < len; i++) {
         dataset[i] = {
             num: items[i],
             state: states.default
