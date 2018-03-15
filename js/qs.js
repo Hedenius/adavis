@@ -60,7 +60,7 @@ function shuffle(array) {
  */
 function randomArray() {
     items = [];
-    for(var i = 0; i < 20; i++) {
+    for(var i = 0; i < 50; i++) {
         items.push(Math.floor(Math.random() * (100 - 1)) + 1);
     }
     return items;
@@ -95,8 +95,16 @@ function runActions() {
                 var temp = dataCopy[action.i];
                 dataCopy[action.i] = dataCopy[action.j];
                 dataCopy[action.j] = temp;
-                dataCopy[action.i].state = states.default;
-                dataCopy[action.j].state = states.default;
+                if(dataCopy[action.i].state === states.compare) {
+                    oldPivot = action.i;
+                } else {
+                    dataCopy[action.i].state = states.default;   
+                }
+                if(dataCopy[action.j].state === states.compare) {
+                    oldPivot = action.j;
+                } else {
+                    dataCopy[action.j].state = states.default;
+                }
                 redrawRects(dataCopy);
                 break;
             }
@@ -112,25 +120,24 @@ function runActions() {
                 break;
             }
             case "right": {
-                if (dataCopy[action.right].state !== states.compare) {
+                if (action.right > 0 && dataCopy[action.right].state !== states.compare) {
                     dataCopy[action.right].state = states.minimal;
                 }
-
-                if(oldRight !== null && dataCopy[oldRight].state === states.minimal) {
+                if(oldRight !== null && oldRight > 0 && dataCopy[oldRight].state === states.minimal) {
                     dataCopy[oldRight].state = states.default;
                 }
                 oldRight = action.right;
                 redrawRects(dataCopy);
                 break;
             }
-            case "index": {
-                if(oldIndex !== null) {
-                    dataCopy[oldIndex].state = states.default;
-                }
-                dataCopy[action.index].state = states.current;
-                oldIndex = action.index;
-                break;
-            }
+            // case "index": {
+            //     if(oldIndex !== null) {
+            //         dataCopy[oldIndex].state = states.default;
+            //     }
+            //     dataCopy[action.index].state = states.current;
+            //     oldIndex = action.index;
+            //     break;
+            // }
         }
         if (actions.length === 0) {
             for(var i = 0; i < dataCopy.length; i++) {
@@ -162,7 +169,6 @@ function setSortedString() {
 function partition(items, left, right) {
     var pivot = items[Math.floor((right + left) / 2)].num;
     actions.push({ type: "partition", pivot: Math.floor((right + left) / 2) });
-    var wait = false;
     var i = left;
     actions.push({type: "left", left: i});
     var j = right;
