@@ -90,23 +90,31 @@
                             </p>
                             <p>
                                 It will sort an array "in-place", meaning it does not need to copy elements into other arrays,
-                                and taking up more space. Quicksort can be implemented both recursively and iteratively, but the forementioned is likely
+                                and taking up more space. Quicksort can be implemented both recursively and iteratively, but the aforementioned is likely
                                 the more common type, and the one used on this page.
                             </p>
                             <p>
-                                Quicksort sections off an array in two parts by choosing a pivot point. This can be chosen randomly, but 
-                                the middle element is good idea. The pivot can be seen in the animation above as the GREEN bar. After the 
+                                Comparisons in a section of the array are made against a pivot point. This can be chosen randomly, but 
+                                the middle element is good idea and used here. The pivot can be seen in the animation above as the GREEN bar. After the 
                                 pivot is chosen two pointers will iterate through the array from both sides of the pivot. 
                                 These are seen in the animation above as the BLUE bars for the left side, and RED bars for the right side.
                             </p>
                             <p>
-                                Iteratation continues until the index of the left pointer is no longer smaller than the index of the right
-                                pointer. During this values are swapped so that all elements on the left are smaller than the pivot point, 
-                                and elements on the right are larger.
+                                Iteration continues until the index of the left pointer is no longer smaller than the index of the right
+                                pointer. During the iteration, the poiners will stop moving when the element at their index is larger (for the left
+                                pointer) or smaller (for the right pointer) than the pivot element. When both pointers have stopped moving, it means
+                                they have found two elements that should be swapped.
                             </p>
                             <p>
-                                When this so-called "partitioning" is completed, a new pivot point is returned that represents either the
-                                most left or most right side of a new sub-array, which is called recursively from within the Quicksort function.
+                                When this so-called "partitioning" is completed a new pointer is returned that represents either the
+                                most left or most right side of a new section of the array that should be sorted. Quicksort is called again
+                                from within its function. This new section to be searched can with quick eyes be identified through it starting with a 
+                                blue bar on the left side, ending on a red bar, and with a green bar (the pivot) in or near the middle.
+                            </p>
+                            <p>
+                                Once the partition function returns an index that is larger than both the left side and the right side
+                                the Quicksort function no longer calls new Quicksorts and returns. When all the called Quicksorts have returned 
+                                the sorting is over.
                             </p>
                         </div>
                 </div>
