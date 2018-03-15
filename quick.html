@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Adavis</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container">
+        <a class="navbar-brand" href="#" style="font-size: 2em; font-family: Ubuntu"><img src="img/brand.png">Adavis</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topnavContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="topnavContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main role="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 pt-4">
+                <div class="list-group">
+                    <span href="#" class="list-group-item bg-light">Algorithms</span>
+
+                    <a href="#" class="list-group-item active">Quicksort</a>
+                    <a href="#" class="list-group-item">Dijkstra</a>
+
+                    <span href="#" class="list-group-item bg-light">Datastructures</span>
+
+                    <a href="#" class="list-group-item">Stack</a>
+                    <a href="#" class="list-group-item">Queue</a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-lg-8 pt-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Quick sort
+                            </div>
+                            <div id="content-card" class="card-body">
+                                    <div id="chart"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 py-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Controls
+                            </div>
+                            <div class="card-body">
+                                User input
+                                <div class="form-group">
+                                    <input id="user-input" class="form-control" type="text" aria-describedby="input-help">
+                                    <small id="input-help">List of numbers separated by commas. 
+                                        Leave blank for random.</small>
+                                </div>
+                                <div class="form-group">
+                                        <input id="user-speed" class="form-control" type="text" aria-describedby="speed-help">
+                                        <small id="speed-help">The desired speed of animation in milliseconds. Default is 100.</small>
+                                </div>
+                                <button id="btn-sort" class="btn btn-primary">Sort</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                            <h3>Quicksort</h3>
+                            <p>
+                                Quicksort is a comparison sort algorithm in the divide and conquer style. It will quickly
+                                sort large collections, on average taking O(n log n) to do it.
+                            </p>
+                            <p>
+                                It will sort an array "in-place", meaning it does not need to copy elements into other arrays,
+                                and taking up more space. Quicksort can be implemented both recursively and iteratively, but the aforementioned is likely
+                                the more common type, and the one used on this page.
+                            </p>
+                            <p>
+                                Comparisons in a section of the array are made against a pivot point. This can be chosen randomly, but 
+                                the middle element is good idea and used here. The pivot can be seen in the animation above as the GREEN bar. After the 
+                                pivot is chosen two pointers will iterate through the array from both sides of the pivot. 
+                                These are seen in the animation above as the BLUE bars for the left side, and RED bars for the right side.
+                            </p>
+                            <p>
+                                Iteration continues until the index of the left pointer is no longer smaller than the index of the right
+                                pointer. During the iteration, the poiners will stop moving when the element at their index is larger (for the left
+                                pointer) or smaller (for the right pointer) than the pivot element. When both pointers have stopped moving, it means
+                                they have found two elements that should be swapped.
+                            </p>
+                            <p>
+                                When this so-called "partitioning" is completed a new pointer is returned that represents either the
+                                most left or most right side of a new section of the array that should be sorted. Quicksort is called again
+                                from within its function. This new section to be searched can with quick eyes be identified through it starting with a 
+                                blue bar on the left side, ending on a red bar, and with a green bar (the pivot) in or near the middle.
+                            </p>
+                            <p>
+                                Once the partition function returns an index that is larger than both the left side and the right side
+                                the Quicksort function no longer calls new Quicksorts and returns. When all the called Quicksorts have returned 
+                                the sorting is over.
+                            </p>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+
+</footer>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/qs.js"></script>
+
+</body>
+</html>
