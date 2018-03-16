@@ -2,22 +2,29 @@ html, body {
     height: 100%;
 }
 
+/*.link {*/
+    /*fill: none;*/
+    /*stroke: #666;*/
+    /*stroke-width: 1.5px;*/
+/*}*/
+
+.node {
+    fill: red;
+    stroke: #fff;
+    stroke-width: 1px;
+}
+
 .link {
-    fill: none;
-    stroke: #666;
-    stroke-width: 1.5px;
+    stroke: #777;
+    stroke-width: 2px;
 }
 
-#licensing {
-    fill: green;
-}
-
-.link.licensing {
+text {
     stroke: green;
 }
 
-.link.resolved {
-    stroke-dasharray: 0,2 1;
+.link.visited {
+    stroke: green;
 }
 
 circle {
@@ -26,12 +33,18 @@ circle {
     stroke-width: 1.5px;
 }
 
+.label {
+    pointer-events: none;
+    font: 10px sans-serif;
+    stroke: blue;
+}
+
 #graph {
     height: 400px;
 }
 
-/*text {*/
-    /*font: 10px sans-serif;*/
-    /*pointer-events: none;*/
-    /*text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;*/
-/*}*/
+text {
+    font: 10px sans-serif;
+    pointer-events: none;
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
