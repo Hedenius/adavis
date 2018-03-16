@@ -37,15 +37,17 @@
         <div class="row">
             <div class="col-lg-3 pt-4">
                 <div class="list-group">
-                    <span href="#" class="list-group-item bg-light">Algorithms</span>
+                    <span data-toggle="collapse" data-target="#algorithms" class="list-group-item bg-light">Algorithms</span>
+                    <div class="collapse" id="algorithms">
+                        <a href="quick.html" class="list-group-item">Quicksort</a>
+                        <a href="dijkstra.html" class="list-group-item">Dijkstra</a>
+                    </div>
 
-                    <a href="quick.html" class="list-group-item">Quicksort</a>
-                    <a href="dijkstra.html" class="list-group-item">Dijkstra</a>
-
-                    <span href="#" class="list-group-item bg-light">Datastructures</span>
-
-                    <a href="#" class="list-group-item active">Stack</a>
-                    <a href="#" class="list-group-item">Queue</a>
+                    <span data-toggle="collapse" data-target="#datastructures" class="list-group-item bg-light">Datastructures</span>
+                    <div class="collapse" id="datastructures">
+                        <a href="#" class="list-group-item active">Stack</a>
+                        <a href="#" class="list-group-item">Queue</a>
+                    </div>
                 </div>
             </div>
 
@@ -114,6 +116,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
 
 </body>
 </html>
