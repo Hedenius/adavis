@@ -53,7 +53,6 @@ var edges = [
     {source: nodes[5], target: nodes[8], weight: 250}, // F
     {source: nodes[6], target: nodes[8], weight: 250},
     {source: nodes[7], target: nodes[9], weight: 167}, // H
-    {source: nodes[8], target: nodes[9], weight: 85}, // I
     {source: nodes[9], target: nodes[0], weight: 40}, // J
     {source: nodes[9], target: nodes[5], weight: 70},
     {source: nodes[9], target: nodes[8], weight: 70},
@@ -69,7 +68,7 @@ var force = d3.layout.force()
 //     return Math.floor(Math.random() * (width/7));
 // });
 
-force.charge(-1000);
+force.charge(-2000);
 
 svg.append("svg:defs").selectAll("marker")
     .data(["end"])      // Different link/path types can be defined here
