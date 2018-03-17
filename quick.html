@@ -39,6 +39,7 @@
                 <div class="list-group">
                     <span data-toggle="collapse" data-target="#algorithms" class="list-group-item bg-light">Algorithms</span>
                     <div class="collapse" id="algorithms">
+                        <a href="selection.html" class="list-group-item">Selection</a>
                         <a href="quick.html" class="list-group-item active">Quicksort</a>
                         <a href="dijkstra.html" class="list-group-item">Dijkstra</a>
                         <a href="mergesort.html" class="list-group-item">Mergesort</a>
@@ -68,7 +69,7 @@
                             <h3>Quicksort</h3>
                             <p>
                                 Quicksort is a comparison sort algorithm in the divide and conquer style. It will quickly
-                                sort large collections, on average taking O(n log n) to do it.
+                                sort large collections, on average taking <i>O(n log n)</i> to do it.
                             </p>
                             <p>
                                 It will sort an array "in-place", meaning it does not need to copy elements into other arrays,
@@ -77,9 +78,10 @@
                             </p>
                             <p>
                                 Comparisons in a section of the array are made against a pivot point. This can be chosen randomly, but
-                                the middle element is good idea and used here. The pivot can be seen in the animation above as the GREEN bar. After the
-                                pivot is chosen two pointers will iterate through the array from both sides of the pivot.
-                                These are seen in the animation above as the BLUE bars for the left side, and RED bars for the right side.
+                                the middle element is good idea and used here. The pivot can be seen in the animation above as the <font color="#74A82A">green</font> bar.
+                                After the pivot is chosen two pointers will iterate through the array from both sides of the pivot.
+                                These are seen in the animation above as the <font color="#3565A1">blue</font> bars for the left side, and <font color="#A42F11">red</font> 
+                                bars for the right side.
                             </p>
                             <p>
                                 Iteration continues until the index of the left pointer is no longer smaller than the index of the right
@@ -91,7 +93,8 @@
                                 When this so-called "partitioning" is completed a new pointer is returned that represents either the
                                 most left or most right side of a new section of the array that should be sorted. Quicksort is called again
                                 from within its function. This new section to be searched can with quick eyes be identified through it starting with a
-                                blue bar on the left side, ending on a red bar, and with a green bar (the pivot) in or near the middle.
+                                <font color="#3565A1">blue</font> bar on the left side, ending on a <font color="#A42F11">bar</font>, and with a <font color="#74A82A">green</font>
+                                 bar (the pivot) in or near the middle.
                             </p>
                             <p>
                                 Once the partition function returns an index that is larger than both the left side and the right side
