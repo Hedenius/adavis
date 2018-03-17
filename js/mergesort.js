@@ -10,12 +10,29 @@ var actions = [];
 var items = [];
 
 var dataSize = DEFAULT_DATA_SIZE;
-var speedMs = DEFAULT_SPEED_MS;
+var speed = DEFAULT_SPEED_MS;
+
+var interval;
 
 var scale;
 var svg;
 
-$("#btn-sort").click(startMergeSort);
+$("#btn-sort").click(actionButton);
+
+/**
+ * Will either start or abort the animation, based
+ * on the current state of the button.
+ */
+function actionButton() {
+    if($("#btn-sort").html() === "Sort") {
+        $("#btn-sort").html("Abort");
+        startMergeSort();
+    } else if($("#btn-sort").html() === "Abort") {
+        $("#btn-sort").html("Sort");
+        speed = DEFAULT_SPEED_MS;
+        clearInterval(interval)
+    }
+}
 
 function startMergeSort() {
     getUserInput();
@@ -41,7 +58,7 @@ function animateActions(actions) {
     var oldRight = -1;
     var oldCopy = -1;
 
-    var interval = setInterval(function() {
+    interval = setInterval(function() {
         var action = actions.pop();
         if (action) switch (action.type) {
             case "mark_boundary":
@@ -87,7 +104,7 @@ function animateActions(actions) {
                 redrawRects(dataCopy);
                 break;
         }
-    }, speedMs);
+    }, speed);
 }
 
 function mergeSort(dataset) {
@@ -173,6 +190,6 @@ function getUserInput() {
 
     var userSpeed = $("#user-speed").val();
     if(userSpeed !== "") {
-        speedMs = userSpeed;
+        speed = userSpeed;
     }
 }
