@@ -10,8 +10,8 @@ const COLOR = {
     white:  "#FFF"
 };
 
-var width = 300;
-var height = 300;
+var width = 0;
+var height = 0;
 
 var dataset = [];
 var actions = [];
@@ -22,10 +22,6 @@ var speedMs = DEFAULT_SPEED_MS;
 var scale;
 var timer;
 var svg;
-
-function setDataset(size) {
-
-}
 
 function mergeSort(source) {
     var work = [];
