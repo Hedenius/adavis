@@ -39,9 +39,9 @@
                 <div class="list-group">
                     <span data-toggle="collapse" data-target="#algorithms" class="list-group-item bg-light">Algorithms</span>
                     <div class="collapse" id="algorithms">
-                        <a href="quick.html" class="list-group-item active">Quicksort</a>
+                        <a href="quick.html" class="list-group-item">Quicksort</a>
                         <a href="dijkstra.html" class="list-group-item">Dijkstra</a>
-                        <a href="mergesort.html" class="list-group-item">Mergesort</a>
+                        <a href="mergesort.html" class="list-group-item active">Mergesort</a>
                     </div>
 
                     <span data-toggle="collapse" data-target="#datastructures" class="list-group-item bg-light">Datastructures</span>
@@ -57,7 +57,7 @@
                     <div class="col-lg-8 pt-4">
                         <div class="card">
                             <div class="card-header">
-                                Quicksort
+                                Mergesort
                             </div>
                             <div id="content-card" class="card-body">
                                 <div id="chart"></div>
@@ -65,38 +65,30 @@
                         </div>
 
                         <div class="container pt-4">
-                            <h3>Quicksort</h3>
+                            <h3>Mergesort</h3>
                             <p>
-                                Quicksort is a comparison sort algorithm in the divide and conquer style. It will quickly
-                                sort large collections, on average taking O(n log n) to do it.
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur fringilla purus sapien.
+                                Ut facilisis sapien a mi facilisis, nec volutpat lacus cursus.
+                                Sed malesuada urna nulla, sed eleifend tellus posuere sagittis.
+                                Nam a mollis purus. Nunc at dolor tristique, maximus nulla eu, consectetur leo.
+                                Pellentesque tincidunt tempor ex, pellentesque suscipit turpis tristique non.
+                                Etiam a pellentesque justo. Phasellus ut ex nec metus dictum posuere nec non mi.
+                                Proin eu gravida neque. Morbi varius tristique augue, id auctor mi eleifend sit amet.
+                                Praesent eu enim ac risus dapibus scelerisque. Nullam aliquet nulla a tellus euismod, quis ultricies ligula scelerisque.
+                                Sed nunc elit, venenatis non est in, euismod blandit massa. Etiam vehicula dictum metus et suscipit. Cras nec nibh purus.
+                                Sed viverra diam et placerat iaculis.
                             </p>
                             <p>
-                                It will sort an array "in-place", meaning it does not need to copy elements into other arrays,
-                                and taking up more space. Quicksort can be implemented both recursively and iteratively, but the aforementioned is likely
-                                the more common type, and the one used on this page.
-                            </p>
-                            <p>
-                                Comparisons in a section of the array are made against a pivot point. This can be chosen randomly, but
-                                the middle element is good idea and used here. The pivot can be seen in the animation above as the GREEN bar. After the
-                                pivot is chosen two pointers will iterate through the array from both sides of the pivot.
-                                These are seen in the animation above as the BLUE bars for the left side, and RED bars for the right side.
-                            </p>
-                            <p>
-                                Iteration continues until the index of the left pointer is no longer smaller than the index of the right
-                                pointer. During the iteration, the poiners will stop moving when the element at their index is larger (for the left
-                                pointer) or smaller (for the right pointer) than the pivot element. When both pointers have stopped moving, it means
-                                they have found two elements that should be swapped.
-                            </p>
-                            <p>
-                                When this so-called "partitioning" is completed a new pointer is returned that represents either the
-                                most left or most right side of a new section of the array that should be sorted. Quicksort is called again
-                                from within its function. This new section to be searched can with quick eyes be identified through it starting with a
-                                blue bar on the left side, ending on a red bar, and with a green bar (the pivot) in or near the middle.
-                            </p>
-                            <p>
-                                Once the partition function returns an index that is larger than both the left side and the right side
-                                the Quicksort function no longer calls new Quicksorts and returns. When all the called Quicksorts have returned
-                                the sorting is over.
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur fringilla purus sapien.
+                                Ut facilisis sapien a mi facilisis, nec volutpat lacus cursus.
+                                Sed malesuada urna nulla, sed eleifend tellus posuere sagittis.
+                                Nam a mollis purus. Nunc at dolor tristique, maximus nulla eu, consectetur leo.
+                                Pellentesque tincidunt tempor ex, pellentesque suscipit turpis tristique non.
+                                Etiam a pellentesque justo. Phasellus ut ex nec metus dictum posuere nec non mi.
+                                Proin eu gravida neque. Morbi varius tristique augue, id auctor mi eleifend sit amet.
+                                Praesent eu enim ac risus dapibus scelerisque. Nullam aliquet nulla a tellus euismod, quis ultricies ligula scelerisque.
+                                Sed nunc elit, venenatis non est in, euismod blandit massa. Etiam vehicula dictum metus et suscipit. Cras nec nibh purus.
+                                Sed viverra diam et placerat iaculis.
                             </p>
                         </div>
                     </div>
@@ -137,7 +129,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/common.js"></script>
-<script src="js/qs.js"></script>
+<script src="js/mergesort.js"></script>
 
 </body>
 </html>
