@@ -19,6 +19,14 @@ html, body {
     stroke-width: 1px;
 }
 
+.visited {
+    fill: yellow;
+}
+
+.active {
+    stroke: red;
+}
+
 marker {
     stroke: #585858;
     stroke-width: 2px;
