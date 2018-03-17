@@ -4,17 +4,34 @@ var color_default = "#6A6BCD";
 var color_highlight = "#C24787";
 var dataset;
 var svg;
-var speed = 100;
+const defaultSpeed = 100;
+var speed = defaultSpeed;
 var actions = [];
 var items = [];
 var dataCopy;
+var interval;
 
 /**
  * Will scale the passed values to always fit the element.
  */
 var scale;
+// $(window).resize(setRects(dataCopy));
+$("#btn-sort").click(actionButton);
 
-$("#btn-sort").click(initSort);
+/**
+ * Will either start or abort the animation, based
+ * on the current state of the button.
+ */
+function actionButton() {
+    if($("#btn-sort").html() === "Sort") {
+        $("#btn-sort").html("Abort");
+        initSort();
+    } else if($("#btn-sort").html() === "Abort") {
+        $("#btn-sort").html("Sort");
+        speed = defaultSpeed;
+        clearInterval(interval)
+    }
+}
 
 /**
  * Starts the sorting and animations.
@@ -55,7 +72,7 @@ function runActions() {
     var oldIndex = null;
     var oldLeft = null;
     var oldRight = null;
-    var interval = setInterval(function step() {
+    interval = setInterval(function step() {
         var action = actions.pop();
         if (action) switch (action.type) {
             case "partition": {
@@ -106,14 +123,6 @@ function runActions() {
                 redrawRects(dataCopy);
                 break;
             }
-            // case "index": {
-            //     if(oldIndex !== null) {
-            //         dataCopy[oldIndex].state = STATES.default;
-            //     }
-            //     dataCopy[action.index].state = STATES.current;
-            //     oldIndex = action.index;
-            //     break;
-            // }
         }
         if (actions.length === 0) {
             for(var i = 0; i < dataCopy.length; i++) {
@@ -122,6 +131,7 @@ function runActions() {
             console.log(dataCopy);
             redrawRects(dataCopy);
             setSortedString();
+            speed = defaultSpeed;   
             clearInterval(interval);
         }
     }, speed);

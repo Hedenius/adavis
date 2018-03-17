@@ -39,10 +39,10 @@
                 <div class="list-group">
                     <span data-toggle="collapse" data-target="#algorithms" class="list-group-item bg-light">Algorithms</span>
                     <div class="collapse" id="algorithms">
-                        <a href="selection.html" class="list-group-item">Selection</a>
+                        <a href="selection.html" class="list-group-item active">Selection</a>
                         <a href="quick.html" class="list-group-item">Quicksort</a>
                         <a href="dijkstra.html" class="list-group-item">Dijkstra</a>
-                        <a href="mergesort.html" class="list-group-item active">Mergesort</a>
+                        <a href="mergesort.html" class="list-group-item">Mergesort</a>
                     </div>
 
                     <span data-toggle="collapse" data-target="#datastructures" class="list-group-item bg-light">Datastructures</span>
@@ -58,7 +58,7 @@
                     <div class="col-lg-8 pt-4">
                         <div class="card">
                             <div class="card-header">
-                                Mergesort
+                                Selection sort
                             </div>
                             <div id="content-card" class="card-body">
                                 <div id="chart"></div>
@@ -66,30 +66,25 @@
                         </div>
 
                         <div class="container pt-4">
-                            <h3>Mergesort</h3>
+                            <h3>Selection sort</h3>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur fringilla purus sapien.
-                                Ut facilisis sapien a mi facilisis, nec volutpat lacus cursus.
-                                Sed malesuada urna nulla, sed eleifend tellus posuere sagittis.
-                                Nam a mollis purus. Nunc at dolor tristique, maximus nulla eu, consectetur leo.
-                                Pellentesque tincidunt tempor ex, pellentesque suscipit turpis tristique non.
-                                Etiam a pellentesque justo. Phasellus ut ex nec metus dictum posuere nec non mi.
-                                Proin eu gravida neque. Morbi varius tristique augue, id auctor mi eleifend sit amet.
-                                Praesent eu enim ac risus dapibus scelerisque. Nullam aliquet nulla a tellus euismod, quis ultricies ligula scelerisque.
-                                Sed nunc elit, venenatis non est in, euismod blandit massa. Etiam vehicula dictum metus et suscipit. Cras nec nibh purus.
-                                Sed viverra diam et placerat iaculis.
+                                Selection sort is one of the most simple sorting algorithms, as well as one with quite poor
+                                performance on large amounts of data. It has a time complexity of <i>O(n<sup>2</sup>)</i> but 
+                                due to sorting in-place it can still be useful if space is very limited. 
                             </p>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur fringilla purus sapien.
-                                Ut facilisis sapien a mi facilisis, nec volutpat lacus cursus.
-                                Sed malesuada urna nulla, sed eleifend tellus posuere sagittis.
-                                Nam a mollis purus. Nunc at dolor tristique, maximus nulla eu, consectetur leo.
-                                Pellentesque tincidunt tempor ex, pellentesque suscipit turpis tristique non.
-                                Etiam a pellentesque justo. Phasellus ut ex nec metus dictum posuere nec non mi.
-                                Proin eu gravida neque. Morbi varius tristique augue, id auctor mi eleifend sit amet.
-                                Praesent eu enim ac risus dapibus scelerisque. Nullam aliquet nulla a tellus euismod, quis ultricies ligula scelerisque.
-                                Sed nunc elit, venenatis non est in, euismod blandit massa. Etiam vehicula dictum metus et suscipit. Cras nec nibh purus.
-                                Sed viverra diam et placerat iaculis.
+                                The algorithm will for each element in the array compare it against the rest. In the animation above
+                                the element currently being compared against the rest can be seen as the <font color="#3565A1">blue</font> bar. 
+                                Each <font color="#3565A1">blue</font> bar acts like a starting point for a nestled for loop iterating over
+                                the remaining right side of the list. The current index of the loop can be seen as the bar marked <font color="#74A82A">green</font>.
+                            </p>
+                            <p>
+                                When the inner loop, the <font color="#74A82A">green</font> bar, has found an element that is smaller than the one currently being 
+                                compared to the rest this element will be marked in <font color="#D55511">orange</font>. Whichever element is marked <font color="#D55511">orange</font> (the smallet)
+                                by the end of the inner loop will be swapped with the element it was compared to.
+                            </p>
+                            <p>
+                                This is repeated until the outer loop reaches the end and no sorting is left to be done.
                             </p>
                         </div>
                     </div>
@@ -130,7 +125,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/common.js"></script>
-<script src="js/mergesort.js"></script>
+<script src="js/selection.js"></script>
 
 </body>
 </html>

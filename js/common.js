@@ -18,7 +18,7 @@ function setRects(dataset) {
 
     svg = d3.select("#chart")
         .append("svg")
-        .attr("width", width)
+        .attr("width", $("#content-card").width())
         .attr("height", height);
 
     var rects = svg.selectAll("rect")
@@ -97,7 +97,7 @@ function shuffle(array) {
  * For when the user has not entered anything on their own.
  */
 function randomArray(size) {
-    items = [];
+    var items = [];
     for(var i = 0; i < size; i++) {
         items.push(Math.floor(Math.random() * (100 - 1)) + 1);
     }
