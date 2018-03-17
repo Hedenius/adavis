@@ -59,7 +59,7 @@ svg.append("svg:defs").selectAll("marker")
     .append("svg:marker")    // This section adds in the arrows
     .attr("id", String)
     .attr("viewBox", "0 -5 10 10")
-    .attr("refX", 10)
+    .attr("refX", 15)
     .attr("refY", 0)
     .attr("markerWidth", 15)
     .attr("markerHeight", 15)
@@ -104,7 +104,7 @@ var label = svg.selectAll(".label")
     .style("font-size", 12);
 
 force.on('tick', function() {
-    node.attr('r', width/100)
+    node.attr('r', width/40)
         .attr('cx', function(d) { return d.x; })
         .attr('cy', function(d) { return d.y; });
 
@@ -118,7 +118,7 @@ force.on('tick', function() {
         .attr("y", function(d) { return (d.source.y + (d.target.y - d.source.y) * 0.5); });
 
     label.attr("x", function(d){ return d.x; })
-        .attr("y", function (d) {return d.y - 10; });
+        .attr("y", function (d) {return d.y+4; });
 
 });
 
@@ -205,11 +205,9 @@ function doDijkstraMagic() {
 
         var intervalId;
         var counter = 0;
-
         var keys = Object.keys(adjacencyList);
 
         intervalId = setInterval( function () {
-            // TODO: doobiedoo
             if (counter < keys.length) {
 
                 var target = keys[counter];
