@@ -29,7 +29,8 @@ html, body {
 
 marker {
     stroke: #585858;
-    stroke-width: 2px;
+    fill: #585858;
+    stroke-width: 1px;
 }
 
 text {
