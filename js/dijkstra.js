@@ -12,8 +12,6 @@ var svg = d3.select('#graph').append('svg')
     .attr('width', width)
     .attr('height', height);
 
-var nodesX = width - 20;
-var nodesY = height - 20;
 var nodes = [
     {name: "A"},
     {name: "B"},
@@ -27,19 +25,6 @@ var nodes = [
     {name: "J"},
     {name: "K"}
 ];
-
-// var edges = [
-//     {source: nodes[0], target: nodes[1], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[2], target: nodes[1], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[3], target: nodes[0], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[4], target: nodes[2], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[1], target: nodes[4], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[5], target: nodes[4], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[5], target: nodes[2], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[5], target: nodes[0], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[1], target: nodes[0], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[2], target: nodes[3], weight: Math.floor(Math.random() * 10)}
-// ];
 
 var edges = [
     {source: nodes[0], target: nodes[1], weight: 85}, // A -- B
@@ -65,10 +50,6 @@ var force = d3.layout.force()
     .links(edges);
 
 force.linkDistance(50);
-
-// force.linkDistance(function(d) {
-//     return Math.floor(Math.random() * (width/7));
-// });
 
 force.charge(-2000);
 
@@ -197,23 +178,14 @@ function doDijkstraMagic() {
         return nodeIndex; // node index from nodes
     }
 
-    // setTimeout(function () { // TODO: remove this timeout later
-        var timerId = setInterval( function() {
-            if (queueNodes.length !== 0) {
-                relax( findMin() );
-            } else {
-                console.log("ANSWER: " + distTo[end]); // final answer yay
-                clearInterval(timerId);
-            }
-        }, 1000);
-    // }, 5000);
-
-        // while (queueNodes.length !== 0) {
-        //     relax( findMin() );
-        // }
-        // console.log("ANSWER: " + distTo[end]); // final answer yay
-
-
+    var timerId = setInterval( function() {
+        if (queueNodes.length !== 0) {
+            relax( findMin() );
+        } else {
+            console.log("ANSWER: " + distTo[end]); // final answer yay
+            clearInterval(timerId);
+        }
+    }, 1000);
 
     function relax(index) {
         console.log(index);
@@ -226,53 +198,24 @@ function doDijkstraMagic() {
 
         var adjacencyList = graph[source];
         console.log("adjacencyList:  " + JSON.stringify(adjacencyList));
+        if (adjacencyList === undefined) {
+            sourceEleement.attr("class", "node visited");
+            return;
+        }
 
-        // var intervalId;
-        // var counter = 0;
-        // var keys = Object.keys(adjacencyList);
-        // var values = Object.values(adjacencyList);
-        //
-        // intervalId = setInterval( function () {
-        //     // TODO: doobiedoo
-        //     if (counter < keys.length) {
-        //
-        //         var target = keys[counter];
-        //         console.log(target);
-        //
-        //         console.log(JSON.stringify("TARGET: " + target));
-        //
-        //         $("#node-"+target).attr("class", "node visited"); // visited
-        //         $("#edge-"+source+target).css("stroke", "purple"); // active edge
-        //
-        //         var indexOfLetter = findNode(target);
-        //         console.log("index of letter: " + indexOfLetter);
-        //         console.log("distTo[indexOfLetter] " + distTo[indexOfLetter]);
-        //         console.log("distTo[index] " + distTo[index] + " edge.weight " + graph[source][target]);
-        //         if (distTo[indexOfLetter] > distTo[index] + graph[source][target]) {
-        //             distTo[indexOfLetter] = distTo[index] + graph[source][target];
-        //             console.log("distTo[indexOfLetter] " + distTo[indexOfLetter]);
-        //
-        //             if (indexOfLetter in queueNodes) {
-        //                 queueWeights[queueNodes.indexOf(indexOfLetter)] = distTo[indexOfLetter];
-        //             } else {
-        //                 queueNodes.push(indexOfLetter);
-        //                 queueWeights.push( distTo[ indexOfLetter] );
-        //             }
-        //         }
-        //         console.log(JSON.stringify(queueNodes));
-        //         console.log(JSON.stringify(queueWeights));
-        //         console.log(JSON.stringify(distTo));
-        //         counter++;
-        //     } else {
-        //         clearInterval(intervalId);
-        //         sourceEleement.attr("class", "node visited");
-        //     }
-        // }, 500);
+        var intervalId;
+        var counter = 0;
 
+        var keys = Object.keys(adjacencyList);
 
-        for (var target in adjacencyList ) {
-            console.log(JSON.stringify("TARGET: " + target));
-            if (adjacencyList.hasOwnProperty(target)) {
+        intervalId = setInterval( function () {
+            // TODO: doobiedoo
+            if (counter < keys.length) {
+
+                var target = keys[counter];
+                console.log(target);
+
+                console.log(JSON.stringify("TARGET: " + target));
 
                 $("#node-"+target).attr("class", "node visited"); // visited
                 $("#edge-"+source+target).css("stroke", "orange"); // active edge
@@ -283,6 +226,7 @@ function doDijkstraMagic() {
                 console.log("distTo[index] " + distTo[index] + " edge.weight " + graph[source][target]);
                 if (distTo[indexOfLetter] > distTo[index] + graph[source][target]) {
                     distTo[indexOfLetter] = distTo[index] + graph[source][target];
+                    console.log("distTo[indexOfLetter] " + distTo[indexOfLetter]);
                     console.log("distTo[indexOfLetter] NEW " + distTo[indexOfLetter]);
 
                     if (queueNodes.includes(index)) {
@@ -297,9 +241,12 @@ function doDijkstraMagic() {
                 console.log(JSON.stringify("Queue nodes: " + queueNodes));
                 console.log(JSON.stringify("Queue wights: " + queueWeights));
                 console.log(JSON.stringify("Dist to array: " + distTo));
+                counter++;
+            } else {
+                clearInterval(intervalId);
+                sourceEleement.attr("class", "node visited");
             }
-        }
-        sourceEleement.attr("class", "node visited");
+        }, 500);
     }
 
     function findNode(name) {
