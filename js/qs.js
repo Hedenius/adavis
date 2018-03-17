@@ -1,7 +1,5 @@
 var width = $("#content-card").width();
 var height = 250;
-var states = { "default": 0, "finished": 1, "current": 2, "compare": 3, "minimal": 4, "hide": 5 };
-var colors = ["#B7C4CF", "#3565A1", "#D55511", "#74A82A", "#A42F11", "#fff"];
 var color_default = "#6A6BCD";
 var color_highlight = "#C24787";
 var dataset;
@@ -22,9 +20,11 @@ $("#btn-sort").click(initSort);
  * Starts the sorting and animations.
  */
 function initSort() {
+    actions = [];
+
     var userArray = $("#user-input").val();
     if(userArray === "") {
-        items = randomArray();
+        items = randomArray(50);
     } else {
         items = userArray.split(",").map(Number);
         items = shuffle(items);
@@ -40,30 +40,6 @@ function initSort() {
     }
     var result = quickSort(dataset, 0, dataset.length - 1);
     runActions();
-}
-
-// Fisher–Yates shuffle
-function shuffle(array) {
-    var i = array.length, j, t;
-    while (--i > 0) {
-      j = ~~(Math.random() * (i + 1));
-      t = array[j];
-      array[j] = array[i];
-      array[i] = t;
-    }
-    return array;
-  }
-
-/**
- * Returns an array of random numbers between 1 and 100.
- * For when the user has not entered anything on their own.
- */
-function randomArray() {
-    items = [];
-    for(var i = 0; i < 50; i++) {
-        items.push(Math.floor(Math.random() * (100 - 1)) + 1);
-    }
-    return items;
 }
 
 /**
@@ -83,10 +59,10 @@ function runActions() {
         var action = actions.pop();
         if (action) switch (action.type) {
             case "partition": {
-                if(oldPivot !== null && dataCopy[oldPivot].state === states.compare) {
-                    dataCopy[oldPivot].state = states.default;
+                if(oldPivot !== null && dataCopy[oldPivot].state === STATES.compare) {
+                    dataCopy[oldPivot].state = STATES.default;
                 }
-                dataCopy[action.pivot].state = states.compare;
+                dataCopy[action.pivot].state = STATES.compare;
                 oldPivot = action.pivot;
                 redrawRects(dataCopy);
                 break;
@@ -95,36 +71,36 @@ function runActions() {
                 var temp = dataCopy[action.i];
                 dataCopy[action.i] = dataCopy[action.j];
                 dataCopy[action.j] = temp;
-                if(dataCopy[action.i].state === states.compare) {
+                if(dataCopy[action.i].state === STATES.compare) {
                     oldPivot = action.i;
                 } else {
-                    dataCopy[action.i].state = states.default;   
+                    dataCopy[action.i].state = STATES.default;
                 }
-                if(dataCopy[action.j].state === states.compare) {
+                if(dataCopy[action.j].state === STATES.compare) {
                     oldPivot = action.j;
                 } else {
-                    dataCopy[action.j].state = states.default;
+                    dataCopy[action.j].state = STATES.default;
                 }
                 redrawRects(dataCopy);
                 break;
             }
             case "left": {
-                if (dataCopy[action.left].state !== states.compare) {
-                    dataCopy[action.left].state = states.finished;
+                if (dataCopy[action.left].state !== STATES.compare) {
+                    dataCopy[action.left].state = STATES.finished;
                 }
-                if(oldLeft !== null && dataCopy[oldLeft].state === states.finished) {
-                    dataCopy[oldLeft].state = states.default;
+                if(oldLeft !== null && dataCopy[oldLeft].state === STATES.finished) {
+                    dataCopy[oldLeft].state = STATES.default;
                 }
                 oldLeft = action.left;
                 redrawRects(dataCopy);
                 break;
             }
             case "right": {
-                if (action.right > 0 && dataCopy[action.right].state !== states.compare) {
-                    dataCopy[action.right].state = states.minimal;
+                if (action.right > 0 && dataCopy[action.right].state !== STATES.compare) {
+                    dataCopy[action.right].state = STATES.minimal;
                 }
-                if(oldRight !== null && oldRight > 0 && dataCopy[oldRight].state === states.minimal) {
-                    dataCopy[oldRight].state = states.default;
+                if(oldRight !== null && oldRight > 0 && dataCopy[oldRight].state === STATES.minimal) {
+                    dataCopy[oldRight].state = STATES.default;
                 }
                 oldRight = action.right;
                 redrawRects(dataCopy);
@@ -132,16 +108,16 @@ function runActions() {
             }
             // case "index": {
             //     if(oldIndex !== null) {
-            //         dataCopy[oldIndex].state = states.default;
+            //         dataCopy[oldIndex].state = STATES.default;
             //     }
-            //     dataCopy[action.index].state = states.current;
+            //     dataCopy[action.index].state = STATES.current;
             //     oldIndex = action.index;
             //     break;
             // }
         }
         if (actions.length === 0) {
             for(var i = 0; i < dataCopy.length; i++) {
-                dataCopy[i].state = states.default;
+                dataCopy[i].state = STATES.default;
             }
             console.log(dataCopy);
             redrawRects(dataCopy);
@@ -184,6 +160,7 @@ function partition(items, left, right) {
         }
         if (i <= j) {
             swap(items, i, j);
+            actions.push({ type: "swap", i: i, j: j});
             i++;
             actions.push({ type: "left", left: i });
             j--;
@@ -211,86 +188,6 @@ function quickSort(items, left, right) {
 }
 
 /**
- * Standard swap function.
- */
-function swap(items, firstIndex, secondIndex) {
-    var temp = items[firstIndex];
-    items[firstIndex] = items[secondIndex];
-    items[secondIndex] = temp;
-    actions.push({ type: "swap", i: firstIndex, j: secondIndex });
-}
-
-/**
- * Displays the passed dataset as a barchart on the page.
- */
-function setRects(set) {
-    document.getElementById("chart").innerHTML = "";
-
-    svg = d3.select("#chart")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
-
-    var rects = svg.selectAll("rect")
-        .data(set)
-        .enter()
-        .append("rect");
-
-    rects.attr("x", function (d, i) {
-        return i * (width / set.length);
-    });
-
-    rects.attr("y", function (d, i) {
-        return Math.round(height - scale(d.num));
-    });
-
-    rects.attr("width", function (d, i) {
-        return Math.round(($("#content-card").width() / set.length) - 2);
-    });
-
-    rects.attr("height", function (d, i) {
-        return Math.round(scale(d.num));
-    });
-
-    rects.attr("fill", function (d, i) {
-        return colors[d.state];
-    });
-    
-    //Ändrar sig inte vid redraw på korrekt sätt, så det får vara
-    //en TODO.
-    // rects.append("title").text(function(d, i) {
-    //     return d.num;
-    // });
-}
-
-/**
- * Redraws the passed set of data as new bar charts.
- * Updates their length and color, basically.
- */
-function redrawRects(data) {
-    var rects = svg.selectAll("rect")
-        .data(data)
-        .transition()
-        .duration(50 / 2 | 0);
-
-    rects.attr("y", function (d, i) {
-        return Math.round(height - scale(d.num));
-    });
-
-    rects.attr("width", function (d, i) {
-        return Math.round(($("#content-card").width() / data.length) - 2);
-    });
-
-    rects.attr("height", function (d, i) {
-        return Math.round(scale(d.num));
-    });
-
-    rects.attr("fill", function (d, i) {
-        return colors[d.state];
-    });
-}
-
-/**
  * Transforms the passed array of numbers into
  * an array of objects used to make sense of displayment.
  */
@@ -300,7 +197,7 @@ function setDataset(items) {
     for (var i = 0; i < len; i++) {
         dataset[i] = {
             num: items[i],
-            state: states.default
+            state: STATES.default
         };
     }
 }

@@ -2,41 +2,46 @@ html, body {
     height: 100%;
 }
 
-/*.link {*/
-    /*fill: none;*/
-    /*stroke: #666;*/
-    /*stroke-width: 1.5px;*/
-/*}*/
-
 .node {
-    fill: red;
+    fill: #d3d3d3;
     stroke: #fff;
-    stroke-width: 1px;
+    stroke-width: 2px;
 }
 
 .link {
     stroke: #777;
-    stroke-width: 2px;
+    stroke-width: 1px;
+}
+
+.visited {
+    fill: yellow;
+}
+
+.active {
+    fill: red;
+}
+
+marker {
+    stroke: #585858;
+    fill: #585858;
+    stroke-width: 1px;
 }
 
 text {
     stroke: green;
-}
-
-.link.visited {
-    stroke: green;
+    font: 8px sans-serif;
 }
 
 circle {
     fill: #ccc;
     stroke: #333;
-    stroke-width: 1.5px;
+    stroke-width: 1px;
 }
 
 .label {
     pointer-events: none;
-    font: 10px sans-serif;
-    stroke: blue;
+    font: 8px sans-serif;
+    stroke: #4c4cff;
 }
 
 #graph {

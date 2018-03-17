@@ -12,8 +12,6 @@ var svg = d3.select('#graph').append('svg')
     .attr('width', width)
     .attr('height', height);
 
-var nodesX = width - 20;
-var nodesY = height - 20;
 var nodes = [
     {name: "A"},
     {name: "B"},
@@ -28,19 +26,6 @@ var nodes = [
     {name: "K"}
 ];
 
-// var edges = [
-//     {source: nodes[0], target: nodes[1], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[2], target: nodes[1], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[3], target: nodes[0], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[4], target: nodes[2], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[1], target: nodes[4], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[5], target: nodes[4], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[5], target: nodes[2], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[5], target: nodes[0], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[1], target: nodes[0], weight: Math.floor(Math.random() * 10)},
-//     {source: nodes[2], target: nodes[3], weight: Math.floor(Math.random() * 10)}
-// ];
-
 var edges = [
     {source: nodes[0], target: nodes[1], weight: 85}, // A -- B
     {source: nodes[0], target: nodes[2], weight: 217}, // A -- C
@@ -53,7 +38,6 @@ var edges = [
     {source: nodes[5], target: nodes[8], weight: 250}, // F
     {source: nodes[6], target: nodes[8], weight: 250},
     {source: nodes[7], target: nodes[9], weight: 167}, // H
-    {source: nodes[8], target: nodes[9], weight: 85}, // I
     {source: nodes[9], target: nodes[0], weight: 40}, // J
     {source: nodes[9], target: nodes[5], weight: 70},
     {source: nodes[9], target: nodes[8], weight: 70},
@@ -65,11 +49,9 @@ var force = d3.layout.force()
     .nodes(nodes)
     .links(edges);
 
-// force.linkDistance(function(d) {
-//     return Math.floor(Math.random() * (width/7));
-// });
+force.linkDistance(50);
 
-force.charge(-1000);
+force.charge(-2000);
 
 svg.append("svg:defs").selectAll("marker")
     .data(["end"])      // Different link/path types can be defined here
@@ -78,21 +60,21 @@ svg.append("svg:defs").selectAll("marker")
     .attr("id", String)
     .attr("viewBox", "0 -5 10 10")
     .attr("refX", 15)
-    .attr("refY", -1.5)
-    .attr("markerWidth", 5)
-    .attr("markerHeight", 5)
+    .attr("refY", 0)
+    .attr("markerWidth", 15)
+    .attr("markerHeight", 15)
     .attr("orient", "auto")
     .append("svg:path")
-    .attr("d", "M0,-5L10,0L0,5");
+    .attr("d", "M 0,0 m -5,-5 L 5,0 L -5,5 Z");
 
 var link = svg.selectAll('.link')
     .data(edges)
     .enter()
     .append("g")
     .attr("class", "link-group")
-    // .attr("id", "edge")
     .append('line')
     .attr('class', 'link')
+    .attr("id", function(d) { return "edge-"+d.source.name+d.target.name})
     .attr("marker-end", "url(#end)");
 
 var linkText = svg.selectAll(".link-group")
@@ -107,7 +89,8 @@ var linkText = svg.selectAll(".link-group")
 var node = svg.selectAll('.node')
     .data(nodes)
     .enter().append('circle')
-    .attr('class', 'node');
+    .attr('class', 'node')
+    .attr('id', function (d) { return 'node-'+d.name; });
 
 var label = svg.selectAll(".label")
     .data(nodes)
@@ -121,7 +104,7 @@ var label = svg.selectAll(".label")
     .style("font-size", 12);
 
 force.on('tick', function() {
-    node.attr('r', width/100)
+    node.attr('r', width/40)
         .attr('cx', function(d) { return d.x; })
         .attr('cy', function(d) { return d.y; });
 
@@ -135,7 +118,7 @@ force.on('tick', function() {
         .attr("y", function(d) { return (d.source.y + (d.target.y - d.source.y) * 0.5); });
 
     label.attr("x", function(d){ return d.x; })
-        .attr("y", function (d) {return d.y - 10; });
+        .attr("y", function (d) {return d.y+4; });
 
 });
 
@@ -164,10 +147,10 @@ function makeGraph() {
 
 function doDijkstraMagic() {
 
-    graph = makeGraph();
+    const graph = makeGraph();
 
-    var start = 0;
-    var end = 0;
+    var start = 1;
+    var end = 2;
 
     // Initialise all the distances with infinity, except the start, the distance to which is 0;
     var distTo = [];
@@ -185,7 +168,7 @@ function doDijkstraMagic() {
     console.log(JSON.stringify(queueWeights));
 
     function findMin() {
-        var min = Math.min(...queueWeights); // why the hell is it red in Webstorm?.. why the hell doesn't Math.min.apply() work?..
+        var min = Math.min(...queueWeights); // why the hell doesn't Math.min.apply() work?..
 
         var index = queueWeights.indexOf(min);
         var nodeIndex = queueNodes[ index ];
@@ -195,43 +178,73 @@ function doDijkstraMagic() {
         return nodeIndex; // node index from nodes
     }
 
-    while (queueNodes.length !== 0) {
-        // find and return the node in the queue with the minimal weight
-        relax( findMin() );
-    }
-    console.log(distTo[end]); // final answer yay
+    var timerId = setInterval( function() {
+        if (queueNodes.length !== 0) {
+            relax( findMin() );
+        } else {
+            console.log("ANSWER: " + distTo[end]); // final answer yay
+            clearInterval(timerId);
+        }
+    }, 1000);
 
     function relax(index) {
         console.log(index);
 
-        var name = nodes[index].name;
-        console.log(name);
-        console.log(JSON.stringify(graph[name]));
-        var adjacencyList = graph[name];
-        for (var target in adjacencyList ) {
-            console.log(JSON.stringify("EDGE: " + target));
-            if (adjacencyList.hasOwnProperty(target)) {
+        var source = nodes[index].name;
+        console.log("SOURCE: " + source);
+
+        var sourceEleement = $("#node-"+source);
+        sourceEleement.attr("class", "node active");
+
+        var adjacencyList = graph[source];
+        console.log("adjacencyList:  " + JSON.stringify(adjacencyList));
+        if (adjacencyList === undefined) {
+            sourceEleement.attr("class", "node visited");
+            return;
+        }
+
+        var intervalId;
+        var counter = 0;
+        var keys = Object.keys(adjacencyList);
+
+        intervalId = setInterval( function () {
+            if (counter < keys.length) {
+
+                var target = keys[counter];
+                console.log(target);
+
+                console.log(JSON.stringify("TARGET: " + target));
+
+                $("#node-"+target).attr("class", "node visited"); // visited
+                $("#edge-"+source+target).css("stroke", "orange"); // active edge
 
                 var indexOfLetter = findNode(target);
                 console.log("index of letter: " + indexOfLetter);
                 console.log("distTo[indexOfLetter] " + distTo[indexOfLetter]);
-                console.log("distTo[index] " + distTo[index] + " edge.weight " + graph[name][target]);
-                if (distTo[indexOfLetter] > distTo[index] + graph[name][target]) {
-                    distTo[indexOfLetter] = distTo[index] + graph[name][target];
+                console.log("distTo[index] " + distTo[index] + " edge.weight " + graph[source][target]);
+                if (distTo[indexOfLetter] > distTo[index] + graph[source][target]) {
+                    distTo[indexOfLetter] = distTo[index] + graph[source][target];
                     console.log("distTo[indexOfLetter] " + distTo[indexOfLetter]);
+                    console.log("distTo[indexOfLetter] NEW " + distTo[indexOfLetter]);
 
-                    if (indexOfLetter in queueNodes) {
+                    if (queueNodes.includes(index)) {
                         queueWeights[queueNodes.indexOf(indexOfLetter)] = distTo[indexOfLetter];
+                        console.log("Updating weight");
                     } else {
                         queueNodes.push(indexOfLetter);
                         queueWeights.push( distTo[ indexOfLetter] );
+                        console.log("Pushing to queue");
                     }
                 }
+                console.log(JSON.stringify("Queue nodes: " + queueNodes));
+                console.log(JSON.stringify("Queue wights: " + queueWeights));
+                console.log(JSON.stringify("Dist to array: " + distTo));
+                counter++;
+            } else {
+                clearInterval(intervalId);
+                sourceEleement.attr("class", "node visited");
             }
-            console.log(JSON.stringify(queueNodes));
-            console.log(JSON.stringify(queueWeights));
-            console.log(JSON.stringify(distTo));
-        }
+        }, 500);
     }
 
     function findNode(name) {
