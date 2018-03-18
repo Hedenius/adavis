@@ -104,6 +104,12 @@ function animateActions(actions) {
                 redrawRects(dataCopy);
                 break;
         }
+        if (actions.length === 0) {
+            console.log("asdiasdasd");
+            speed = DEFAULT_SPEED_MS;
+            clearInterval(interval);
+            $("#btn-sort").html("Sort");
+        }
     }, speed);
 }
 

@@ -133,6 +133,7 @@ function runActions() {
             setSortedString();
             speed = defaultSpeed;   
             clearInterval(interval);
+            $("#btn-sort").html("Sort");
         }
     }, speed);
 }
