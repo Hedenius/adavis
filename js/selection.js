@@ -44,7 +44,7 @@ function initSort() {
         items = shuffle(items);
     }
     scale = d3.scaleLinear().domain([0, d3.max(items)]).range([0, height]);
-    setDataset(items);
+    dataset = createDataset(items);
     setRects(dataset);
     dataCopy = dataset.slice(0);
     var userSpeed = $("#user-speed").val();
@@ -152,21 +152,6 @@ function selectionSort(items){
         }
     }
     return items;
-}
-
-/**
- * Transforms the passed array of numbers into
- * an array of objects used to make sense of displayment.
- */
-function setDataset(items) {
-    var len = items.length;
-    dataset = [];
-    for (var i = 0; i < len; i++) {
-        dataset[i] = {
-            num: items[i],
-            state: STATES.default
-        };
-    }
 }
 
 /**
