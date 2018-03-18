@@ -67,16 +67,19 @@ function animateActions(actions) {
                 dataCopy[action.low].state = STATES.current;
                 dataCopy[action.mid].state = STATES.minimal;
                 dataCopy[action.high].state = STATES.current;
-                redrawRects(dataCopy);
+
                 low = action.low;
                 mid = action.mid;
                 high = action.high;
+
+                redrawRects(dataCopy);
                 break;
 
             case "unmark_boundary":
                 dataCopy[action.low].state = STATES.default;
                 dataCopy[action.mid].state = STATES.default;
                 dataCopy[action.high].state = STATES.default;
+
                 redrawRects(dataCopy);
                 break;
 
@@ -126,6 +129,7 @@ function animateActions(actions) {
                 dataCopy[action.ind].num = action.val;
 
                 oldCopy = action.ind;
+
                 redrawRects(dataCopy);
                 break;
         }
