@@ -1,6 +1,8 @@
 const DEFAULT_SPEED_MS = 100;
 const DEFAULT_DATA_SIZE = 50;
 
+const MAX_DATA_SIZE = 100;
+
 var width = $("#content-card").width();
 var height = 250;
 
@@ -32,19 +34,19 @@ $("#btn-sort").click(actionButton);
  * on the current state of the button.
  */
 function actionButton() {
-    if($("#btn-sort").html() === "Sort") {
-        $("#btn-sort").html("Abort");
-        startMergeSort();
-    } else if($("#btn-sort").html() === "Abort") {
-        $("#btn-sort").html("Sort");
-        speed = DEFAULT_SPEED_MS;
-        clearInterval(interval)
+    if (validateUserInput()) {
+        if ($("#btn-sort").html() === "Sort") {
+            $("#btn-sort").html("Abort");
+            startMergeSort();
+        } else if ($("#btn-sort").html() === "Abort") {
+            $("#btn-sort").html("Sort");
+            speed = DEFAULT_SPEED_MS;
+            clearInterval(interval)
+        }
     }
 }
 
 function startMergeSort() {
-    getUserInput();
-
     actions = [];
     items = randomArray(dataSize);
 
@@ -224,14 +226,43 @@ function merge(dataset, low, mid, high) {
     });
 }
 
-function getUserInput() {
+function validateUserInput() {
+    var res = true;
+
     var userInput = $("#user-input").val();
-    if (userInput !== "") {
-        dataSize = userInput;
+    var userSpeed = $("#user-speed").val();
+
+    if (userInput === "") {
+        dataSize = DEFAULT_DATA_SIZE;
+        $("#user-input").removeClass("is-invalid");
     }
 
-    var userSpeed = $("#user-speed").val();
-    if(userSpeed !== "") {
-        speed = userSpeed;
+    if (userSpeed === "") {
+        speed = DEFAULT_SPEED_MS;
+        $("#user-speed").removeClass("is-invalid");
     }
+
+    if (userInput !== "") {
+        if (userInput > MAX_DATA_SIZE) {
+            $("#user-input").addClass("is-invalid");
+            res = false;
+        }
+        else {
+            dataSize = userInput;
+            $("#user-input").removeClass("is-invalid");
+        }
+    }
+
+    if (userSpeed !== "") {
+        if (userSpeed < 0) {
+            $("#user-speed").addClass("is-invalid");
+            res = false;
+        }
+        else {
+            speed = userSpeed;
+            $("#user-speed").removeClass("is-invalid");
+        }
+    }
+
+    return res;
 }
