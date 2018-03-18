@@ -5,23 +5,11 @@
 // https://stackoverflow.com/questions/37640027/add-text-label-to-d3-node-in-force-layout
 // http://bl.ocks.org/norrs/2883411
 
-var speed = 2000; // user-defined
-var start = 1; // user-defined
-var end = 11; // user-defined
-
-var graph = $("#graph");
-var width = graph.width(),
-    height = graph.height();
-
-var svg = d3.select('#graph').append('svg')
-    .attr('width', width)
-    .attr('height', height);
-
-var nodes = [
+const nodes = [
     {name: "A"}, // 0
     {name: "B"}, // 1
-    {name: "C"}, // 2
-    {name: "D"}, // 3
+    {name: "C"}, //2
+    {name: "D"}, //3
     {name: "E"}, // 4
     {name: "F"}, // 5
     {name: "G"}, // 6
@@ -29,10 +17,11 @@ var nodes = [
     {name: "I"}, // 8
     {name: "J"}, // 9
     {name: "K"}, // 10
-    {name: "L"} // 11
+    {name: "L"}, // 11
+    {name: "M"} // 12
 ];
 
-var edges = [
+const edges = [
     {source: nodes[0], target: nodes[1], weight: 85}, // A -- B
     {source: nodes[0], target: nodes[2], weight: 217}, // A -- C
     {source: nodes[0], target: nodes[4], weight: 173}, // A -- D
@@ -54,115 +43,181 @@ var edges = [
     {source: nodes[10], target: nodes[2], weight: 870},
     {source: nodes[10], target: nodes[3], weight: 93},
     {source: nodes[10], target: nodes[11], weight: 1370},
-    {source: nodes[11], target: nodes[7], weight: 38}
+    {source: nodes[11], target: nodes[7], weight: 38},
+    {source: nodes[12], target: nodes[4], weight: 47},
+    {source: nodes[12], target: nodes[1], weight: 201},
+    {source: nodes[12], target: nodes[5], weight: 192}
 ];
 
-var force = d3.layout.force()
-    .size([width, height])
-    .nodes(nodes)
-    .links(edges);
+var speed; // user-defined
+var start; // user-defined
+var end; // user-defined
+var graph;
+var distTo = [];
+var edgeTo = new Array(nodes.length);
+var edgeToIndexes = new Array(nodes.length);
 
-force.linkDistance(50);
+initControls();
+initSVG();
 
-force.charge(-1500);
+function initControls() {
 
-svg.append("svg:defs").selectAll("marker")
-    .data(["end"])      // Different link/path types can be defined here
-    .enter()
-    .append("svg:marker")    // This section adds in the arrows
-    .attr("id", String)
-    .attr("viewBox", "0 -5 10 10")
-    .attr("refX", 15)
-    .attr("refY", 0)
-    .attr("markerWidth", 15)
-    .attr("markerHeight", 15)
-    .attr("orient", "auto")
-    .append("svg:path")
-    .attr("d", "M 0,0 m -5,-5 L 5,0 L -5,5 Z");
+    var dropdownStart = $("#dropdown-start");
+    var dropdownEnd = $("#dropdown-end");
+    dropdownEnd.prop("disabled", "disabled");
+    var enterSpeedField = $("#enter-speed-form");
+    for (var i in nodes) {
+        dropdownStart.append(
+            "<option>" + nodes[i].name +"</option>"
+        );
+        dropdownEnd.append(
+            "<option>" + nodes[i].name +"</option>"
+        );
+    }
+    dropdownEnd.val("M");
 
-var link = svg.selectAll('.link')
-    .data(edges)
-    .enter()
-    .append("g")
-    .attr("class", "link-group")
-    .append('line')
-    .attr('class', 'link')
-    .attr("id", function(d) { return "edge-"+d.source.name+d.target.name})
-    .attr("marker-end", "url(#end)");
+    $("#prepare-graph").submit(function(ev) {
+        ev.preventDefault();
+        speed = enterSpeedField.val(); // TODO: validate
+        if (speed === "") {
+            speed = 2000;
+        }
+        enterSpeedField.val(speed);
 
-var linkText = svg.selectAll(".link-group")
-    .append("text")
-    .data(force.links())
-    .text(function(d) { return d.weight; })
-    .attr("x", function(d) { return (d.source.x + (d.target.x - d.source.x)); })
-    .attr("y", function(d) { return (d.source.y + (d.target.y - d.source.y)); })
-    .attr("dy", ".25em")
-    .attr("text-anchor", "middle");
+        start = findI(dropdownStart.val());
+        enterSpeedField.prop("disabled", "disabled");
+        dropdownStart.prop("disabled", "disabled");
+        dropdownEnd.removeAttr('disabled');
+        doDijkstraMagic();
+    });
 
-var nodeDrag = d3.behavior.drag()
-    .on("dragstart", dragStart)
-    .on("drag", dragMove)
-    .on("dragend", dragEnd);
+    $("#show-shortest-path").submit(function(ev) {
+        ev.preventDefault();
+        end = findI(dropdownEnd.val());
+        showPath();
+    });
 
-function dragMove(d) {
-    d.px += d3.event.dx;
-    d.py += d3.event.dy;
-    d.x += d3.event.dx;
-    d.y += d3.event.dy;
-    tick(); // this is the key to make it work together with updating both px,py,x,y on d !
+    function findI(letter) {
+        for (let i in nodes) {
+            if (nodes[i].name === letter) {
+                return i;
+            }
+        }
+    }
 }
 
-function dragEnd(d) {
-    d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
-    tick();
-    force.resume();
+function initSVG() {
+    var graph = $("#graph");
+    var width = graph.width(),
+        height = graph.height();
+
+    var svg = d3.select('#graph').append('svg')
+        .attr('width', width)
+        .attr('height', height);
+
+    var force = d3.layout.force()
+        .size([width, height])
+        .nodes(nodes)
+        .links(edges);
+
+    force.linkDistance(50);
+    force.charge(-1500);
+
+    svg.append("svg:defs").selectAll("marker")
+        .data(["end"])      // Different link/path types can be defined here
+        .enter()
+        .append("svg:marker")    // This section adds in the arrows
+        .attr("id", String)
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 15)
+        .attr("refY", 0)
+        .attr("markerWidth", 15)
+        .attr("markerHeight", 15)
+        .attr("orient", "auto")
+        .append("svg:path")
+        .attr("d", "M 0,0 m -5,-5 L 5,0 L -5,5 Z");
+
+    var link = svg.selectAll('.link')
+        .data(edges)
+        .enter()
+        .append("g")
+        .attr("class", "link-group")
+        .append('line')
+        .attr('class', 'link')
+        .attr("id", function(d) { return "edge-"+d.source.name+d.target.name})
+        .attr("marker-end", "url(#end)");
+
+    var linkText = svg.selectAll(".link-group")
+        .append("text")
+        .data(force.links())
+        .text(function(d) { return d.weight; })
+        .attr("x", function(d) { return (d.source.x + (d.target.x - d.source.x)); })
+        .attr("y", function(d) { return (d.source.y + (d.target.y - d.source.y)); })
+        .attr("dy", ".25em")
+        .attr("text-anchor", "middle");
+
+    var nodeDrag = d3.behavior.drag()
+        .on("dragstart", dragStart)
+        .on("drag", dragMove)
+        .on("dragend", dragEnd);
+
+    function dragMove(d) {
+        d.px += d3.event.dx;
+        d.py += d3.event.dy;
+        d.x += d3.event.dx;
+        d.y += d3.event.dy;
+        tick(); // this is the key to make it work together with updating both px,py,x,y on d !
+    }
+
+    function dragEnd(d) {
+        d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
+        tick();
+        force.resume();
+    }
+
+    function dragStart() {
+        force.stop() // stops the force auto positioning before you start dragging
+    }
+
+    var node = svg.selectAll('.node')
+        .data(nodes)
+        .enter().append('circle')
+        .attr('class', 'node')
+        .attr('id', function (d) { return 'node-'+d.name; })
+        .call(nodeDrag);;
+
+    var label = svg.selectAll(".label")
+        .data(nodes)
+        .enter()
+        .append("text")
+        .text(function (d) { return d.name; })
+        .attr('class', 'label')
+        .style("text-anchor", "middle")
+        .style("font-family", "Arial")
+        .style("font-size", 10);
+
+    force.on('tick', tick);
+
+    function tick() {
+        node.attr('r', width/40)
+            .attr('cx', function(d) { return d.x; })
+            .attr('cy', function(d) { return d.y; });
+
+        link.attr('x1', function(d) { return d.source.x; })
+            .attr('y1', function(d) { return d.source.y; })
+            .attr('x2', function(d) { return d.target.x; })
+            .attr('y2', function(d) { return d.target.y; });
+
+        linkText
+            .attr("x", function(d) { return (d.source.x + (d.target.x - d.source.x) * 0.5); })
+            .attr("y", function(d) { return (d.source.y + (d.target.y - d.source.y) * 0.5); });
+
+        label.attr("x", function(d){ return d.x; })
+            .attr("y", function (d) {return d.y+4; });
+
+    }
+    force.start();
 }
-
-function dragStart() {
-    force.stop() // stops the force auto positioning before you start dragging
-}
-
-var node = svg.selectAll('.node')
-    .data(nodes)
-    .enter().append('circle')
-    .attr('class', 'node')
-    .attr('id', function (d) { return 'node-'+d.name; })
-    .call(nodeDrag);;
-
-var label = svg.selectAll(".label")
-    .data(nodes)
-    .enter()
-    .append("text")
-    .text(function (d) { return d.name; })
-    .attr('class', 'label')
-    .style("text-anchor", "middle")
-    .style("font-family", "Arial")
-    .style("font-size", 10);
-
-force.on('tick', tick);
-
-function tick() {
-    node.attr('r', width/40)
-        .attr('cx', function(d) { return d.x; })
-        .attr('cy', function(d) { return d.y; });
-
-    link.attr('x1', function(d) { return d.source.x; })
-        .attr('y1', function(d) { return d.source.y; })
-        .attr('x2', function(d) { return d.target.x; })
-        .attr('y2', function(d) { return d.target.y; });
-
-    linkText
-        .attr("x", function(d) { return (d.source.x + (d.target.x - d.source.x) * 0.5); })
-        .attr("y", function(d) { return (d.source.y + (d.target.y - d.source.y) * 0.5); });
-
-    label.attr("x", function(d){ return d.x; })
-        .attr("y", function (d) {return d.y+4; });
-
-}
-
-force.start();
-makeGraph();
-doDijkstraMagic();
 
 function makeGraph() {
     const graph = {};
@@ -185,14 +240,13 @@ function makeGraph() {
 
 function doDijkstraMagic() {
 
-    const graph = makeGraph();
+    graph = makeGraph();
 
-    $("#node-"+nodes[start].name).css("stroke", "#006400").css("stroke-width", "3px"); // start
     console.log("#node-"+nodes[start].name);
-    $("#node-"+nodes[end].name).css("stroke", "#8b0000").css("stroke-width", "3px"); // end
+    $("#node-"+nodes[start].name).css("stroke", "#006400").css("stroke-width", "4px");
 
     // Initialise all the distances with infinity, except the start, the distance to which is 0;
-    var distTo = [];
+
     for (var i=0; i < nodes.length; i++) {
         distTo[i] = Infinity;
     }
@@ -221,8 +275,8 @@ function doDijkstraMagic() {
         if (queueNodes.length !== 0) {
             relax( findMin() );
         } else {
-            console.log("ANSWER: " + distTo[end]); // final answer yay
             clearInterval(timerId);
+            $("#dropdown-end").removeAttr('disabled');
         }
     }, speed);
 
@@ -259,7 +313,11 @@ function doDijkstraMagic() {
                 console.log("distTo[indexOfLetter] " + distTo[indexOfLetter]);
                 console.log("distTo[index] " + distTo[index] + " edge.weight " + graph[source][target]);
                 if (distTo[indexOfLetter] > distTo[index] + values[counter]) {
+
                     distTo[indexOfLetter] = distTo[index] + values[counter];
+                    edgeTo[indexOfLetter] = source;
+                    edgeToIndexes[indexOfLetter] = index;
+
                     console.log("distTo[indexOfLetter] " + distTo[indexOfLetter]);
                     console.log("distTo[indexOfLetter] NEW " + distTo[indexOfLetter]);
 
@@ -288,6 +346,45 @@ function doDijkstraMagic() {
             return node.name === name;
         });
         return index;
+    }
+}
+
+function showPath() {
+    $(".shortest").removeClass("shortest").attr("class", "covered"); // make all black again
+    $(".node").css("stroke", "white").css("stroke-width", "2px");
+    $("#node-"+nodes[start].name).css("stroke", "#006400").css("stroke-width", "4px");
+    $("#node-"+nodes[end].name).css("stroke", "#8b0000").css("stroke-width", "4px");
+    var controlsCard = $("#controls-card");
+    $(".alert").remove();
+
+    if (distTo[end] !== Infinity) {
+
+        controlsCard.append(
+            "<div class=\"alert alert-success m-2 mt-4\" role=\"alert\">" +
+            "Weight from " + nodes[start].name + " to " + nodes[end].name + ": " + distTo[end] +
+            "</div>"
+        );
+
+        console.log("PATH: " + JSON.stringify(edgeTo)); // final answer yay
+        console.log("PATH: " + JSON.stringify(edgeToIndexes)); // final answer yay
+        var iter = end;
+        while (iter !== undefined) {
+            var to = nodes[iter].name;
+            var from = edgeTo[iter];
+            console.log(from);
+            iter = edgeToIndexes[iter];
+            console.log("From " + from + " to " + to );
+            if (from === undefined) {
+                $("#edge-"+nodes[start].name+to).attr("class", "shortest"); // shortest edge
+            } else {
+                $("#edge-"+from+to).attr("class", "shortest"); // shortest edge
+            }
+        }
+    } else {
+        controlsCard.append(
+            "<div class=\"alert alert-danger m-2 mt-4\" role=\"alert\">" +
+            "Oops, there is no path from " + nodes[start].name + " to " + nodes[end].name +"</div>"
+        );
     }
 }
 
