@@ -13,8 +13,15 @@ var interval;
 
 var scale;
 
+$(window).resize(function () {
+    width = $("#content-card").width();
+
+    if (dataCopy.length > 0) {
+        setRects(dataCopy);
+    }
+});
+
 $("#btn-sort").click(actionButton);
-// $(window).resize(setRects(dataCopy));
 
 /**
  * Will either start or abort the animation, based

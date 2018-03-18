@@ -15,7 +15,15 @@ var interval;
  * Will scale the passed values to always fit the element.
  */
 var scale;
-// $(window).resize(setRects(dataCopy));
+
+$(window).resize(function () {
+    width = $("#content-card").width();
+
+    if (dataCopy.length > 0) {
+        setRects(dataCopy);
+    }
+});
+
 $("#btn-sort").click(actionButton);
 
 /**
