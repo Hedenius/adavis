@@ -15,7 +15,15 @@ var interval;
  * Will scale the passed values to always fit the element.
  */
 var scale;
-// $(window).resize(setRects(dataCopy));
+
+$(window).resize(function () {
+    width = $("#content-card").width();
+
+    if (dataCopy.length > 0) {
+        setRects(dataCopy);
+    }
+});
+
 $("#btn-sort").click(actionButton);
 
 /**
@@ -47,7 +55,7 @@ function initSort() {
         items = shuffle(items);
     }
     scale = d3.scaleLinear().domain([0, d3.max(items)]).range([0, height]);
-    setDataset(items);
+    dataset = createDataset(items);
     setRects(dataset);
     dataCopy = dataset.slice(0);
 
@@ -133,6 +141,7 @@ function runActions() {
             setSortedString();
             speed = defaultSpeed;   
             clearInterval(interval);
+            $("#btn-sort").html("Sort");
         }
     }, speed);
 }
@@ -197,18 +206,4 @@ function quickSort(items, left, right) {
     return items;
 }
 
-/**
- * Transforms the passed array of numbers into
- * an array of objects used to make sense of displayment.
- */
-function setDataset(items) {
-    var len = items.length;
-    dataset = [];
-    for (var i = 0; i < len; i++) {
-        dataset[i] = {
-            num: items[i],
-            state: STATES.default
-        };
-    }
-}
 

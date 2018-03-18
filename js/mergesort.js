@@ -1,72 +1,268 @@
 const DEFAULT_SPEED_MS = 100;
-const DEFAULT_DATA_SIZE = 20;
+const DEFAULT_DATA_SIZE = 50;
 
-const COLOR = {
-    gray:   "#B7C4CF",
-    blue:   "#3565A1",
-    orange: "#D55511",
-    green:  "#74A82A",
-    red:    "#A42F11",
-    white:  "#FFF"
-};
+const MAX_DATA_SIZE = 100;
 
-var width = 0;
-var height = 0;
+var width = $("#content-card").width();
+var height = 250;
 
 var dataset = [];
+var dataCopy = [];
 var actions = [];
+var items = [];
 
 var dataSize = DEFAULT_DATA_SIZE;
-var speedMs = DEFAULT_SPEED_MS;
+var speed = DEFAULT_SPEED_MS;
+
+var interval;
 
 var scale;
-var timer;
 var svg;
 
-function mergeSort(source) {
-    var work = [];
-    sort(source, work, 0, source.length - 1);
-}
+$(window).resize(function () {
+    width = $("#content-card").width();
 
-function sort(source, work, low, high) {
-    // find mid without risk of overflow
-    var mid = low +((high - low) / 2);
-
-    // recursively sort left and right part
-    sort(source, work, low, mid);
-    sort(source, work, mid + 1, high);
-
-    // merge result from work array to source array
-    merge(source, work, mid, low, high);
-}
-
-function merge(source, work, low, mid, high) {
-    for (var i = low; i < high; i++) {
-        work[i] = source[i];
+    if (dataCopy.length > 0) {
+        setRects(dataCopy);
     }
+});
+
+$("#btn-sort").click(actionButton);
+
+/**
+ * Will either start or abort the animation, based
+ * on the current state of the button.
+ */
+function actionButton() {
+    if (validateUserInput()) {
+        if ($("#btn-sort").html() === "Sort") {
+            $("#btn-sort").html("Abort");
+            startMergeSort();
+        } else if ($("#btn-sort").html() === "Abort") {
+            $("#btn-sort").html("Sort");
+            speed = DEFAULT_SPEED_MS;
+            clearInterval(interval)
+        }
+    }
+}
+
+function startMergeSort() {
+    actions = [];
+    items = randomArray(dataSize);
+
+    dataset = createDataset(items);
+    dataCopy = dataset.slice(0);
+
+    scale = d3.scaleLinear().domain([0, d3.max(items)]).range([0, height]);
+
+    setRects(dataset);
+
+    mergeSort(dataset);
+
+    animateActions(actions)
+}
+
+function animateActions(actions) {
+    actions.reverse();
+    var oldLeft = -1;
+    var oldRight = -1;
+    var oldCopy = -1;
+    var low = -1;
+    var mid = -1;
+    var high = -1;
+    interval = setInterval(function() {
+        var action = actions.pop();
+        if (action) switch (action.type) {
+            case "mark_boundary":
+                dataCopy[action.low].state = STATES.current;
+                dataCopy[action.mid].state = STATES.minimal;
+                dataCopy[action.high].state = STATES.current;
+
+                low = action.low;
+                mid = action.mid;
+                high = action.high;
+
+                redrawRects(dataCopy);
+                break;
+
+            case "unmark_boundary":
+                dataCopy[action.low].state = STATES.default;
+                dataCopy[action.mid].state = STATES.default;
+                dataCopy[action.high].state = STATES.default;
+
+                redrawRects(dataCopy);
+                break;
+
+            case "compare":
+                if (oldLeft !== -1 && dataCopy[oldLeft].state === STATES.compare) {
+                    dataCopy[oldLeft].state = STATES.default;
+                }
+                if (oldRight !== -1 && dataCopy[oldRight].state === STATES.compare) {
+                    dataCopy[oldRight].state = STATES.default;
+                }
+
+                if (dataCopy[action.left].state !== STATES.current
+                    && dataCopy[action.left].state !== STATES.minimal) {
+
+                    dataCopy[action.left].state = STATES.compare;
+                    oldLeft = action.left;
+                }
+
+                if (dataCopy[action.right].state !== STATES.current
+                    && dataCopy[action.right].state !== STATES.minimal) {
+
+                    dataCopy[action.right].state = STATES.compare;
+                    oldRight = action.right;
+                }
+
+                redrawRects(dataCopy);
+                break;
+
+            case "copy":
+                if (oldCopy !== -1) {
+                    dataCopy[oldCopy].state = STATES.default;
+                }
+
+                if (oldLeft !== -1 && dataCopy[oldLeft].state === STATES.compare) {
+                    dataCopy[oldLeft].state = STATES.default;
+                }
+
+                if (oldRight !== -1 && dataCopy[oldRight].state === STATES.compare) {
+                    dataCopy[oldRight].state = STATES.default;
+                }
+
+                dataCopy[low].state = STATES.default;
+                dataCopy[mid].state = STATES.default;
+                dataCopy[high].state = STATES.default;
+
+                dataCopy[action.ind].state = STATES.finished;
+                dataCopy[action.ind].num = action.val;
+
+                oldCopy = action.ind;
+
+                redrawRects(dataCopy);
+                break;
+        }
+        if (actions.length === 0) {
+            speed = DEFAULT_SPEED_MS;
+            clearInterval(interval);
+            $("#btn-sort").html("Sort");
+        }
+    }, speed);
+}
+
+function mergeSort(dataset) {
+    sort(dataset, 0, dataset.length);
+}
+
+function sort(dataset, low, high) {
+    if (low  + 1 < high) {
+        var mid = Math.floor((low + high) / 2);
+
+        sort(dataset, low, mid);
+        sort(dataset, mid, high);
+
+        merge(dataset, low, mid, high);
+    }
+}
+
+function merge(dataset, low, mid, high) {
+    actions.push({
+            type: "mark_boundary",
+            low: low,
+            mid: mid,
+            high: high - 1,
+    });
+
+    var dest = [];
 
     var left = low;
-    var right = mid + 1;
+    var right = mid;
 
-    // copy (merge) values from positions in the left or right part of the work array
-    // to position i in the source array.
-    for (var i = low; i <= high; i++) {
-        if (left > mid) {
-            source[i] = work[right];
-            right++;
-        }
-        else if (right > high) {
-            source[i] = work[left];
-            left++;
-        }
-        else if (work[left] < work[right]) {
-            source[i] = work[left];
+    while (left < mid && right < high) {
+
+        actions.push({
+           type: "compare",
+           left: left,
+           right: right
+        });
+
+        if (dataset[left].num < dataset[right].num) {
+            dest.push(dataset[left]);
             left++;
         }
         else {
-            source[i] = work[right];
+            dest.push(dataset[right]);
             right++;
         }
     }
+
+    while (left < mid) {
+        dest.push(dataset[left]);
+        left++;
+    }
+
+    while (right < high) {
+        dest.push(dataset[right]);
+        right++;
+    }
+
+    for (var j = 0; j < high - low; ++j) {
+
+        actions.push({
+           type: "copy",
+           ind: low + j,
+           val: dest[j].num
+        });
+
+        dataset[low + j] = dest[j];
+    }
+
+    actions.push({
+        type: "unmark_boundary",
+        low: low,
+        mid: mid,
+        high: high - 1,
+    });
 }
 
+function validateUserInput() {
+    var res = true;
+
+    var userInput = $("#user-input").val();
+    var userSpeed = $("#user-speed").val();
+
+    if (userInput === "") {
+        dataSize = DEFAULT_DATA_SIZE;
+        $("#user-input").removeClass("is-invalid");
+    }
+
+    if (userSpeed === "") {
+        speed = DEFAULT_SPEED_MS;
+        $("#user-speed").removeClass("is-invalid");
+    }
+
+    if (userInput !== "") {
+        if (userInput > MAX_DATA_SIZE) {
+            $("#user-input").addClass("is-invalid");
+            res = false;
+        }
+        else {
+            dataSize = userInput;
+            $("#user-input").removeClass("is-invalid");
+        }
+    }
+
+    if (userSpeed !== "") {
+        if (userSpeed < 0) {
+            $("#user-speed").addClass("is-invalid");
+            res = false;
+        }
+        else {
+            speed = userSpeed;
+            $("#user-speed").removeClass("is-invalid");
+        }
+    }
+
+    return res;
+}

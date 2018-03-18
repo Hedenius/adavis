@@ -7,7 +7,7 @@ const COLOR = {
     white:  "#FFF"
 };
 
-const STATES = { "default": 0, "finished": 1, "current": 2, "compare": 3, "minimal": 4, "hide": 5 };
+const STATES = {"default": 0, "finished": 1, "current": 2, "compare": 3, "minimal": 4, "hide": 5};
 const COLORS = [COLOR.gray, COLOR.blue, COLOR.orange, COLOR.green, COLOR.red, COLOR.white];
 
 /**
@@ -78,6 +78,23 @@ function redrawRects(dataset) {
     rects.attr("fill", function (d, i) {
         return COLORS[d.state];
     });
+}
+
+/**
+ * Transforms the passed array of numbers into
+ * an array of objects used to make sense of displayment.
+ */
+function createDataset(items) {
+    var len = items.length;
+    var dataset = [];
+    for (var i = 0; i < len; i++) {
+        dataset[i] = {
+            num: items[i],
+            state: STATES.default
+        };
+    }
+
+    return dataset;
 }
 
 // Fisher–Yates shuffle
