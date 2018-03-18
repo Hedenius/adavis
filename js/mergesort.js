@@ -113,11 +113,11 @@ function animateActions(actions) {
                     dataCopy[oldCopy].state = STATES.default;
                 }
 
-                if (dataCopy[oldLeft].state === STATES.compare) {
+                if (oldLeft !== -1 && dataCopy[oldLeft].state === STATES.compare) {
                     dataCopy[oldLeft].state = STATES.default;
                 }
 
-                if (dataCopy[oldRight].state === STATES.compare) {
+                if (oldRight !== -1 && dataCopy[oldRight].state === STATES.compare) {
                     dataCopy[oldRight].state = STATES.default;
                 }
 
