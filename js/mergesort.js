@@ -57,7 +57,9 @@ function animateActions(actions) {
     var oldLeft = -1;
     var oldRight = -1;
     var oldCopy = -1;
-
+    var low = -1;
+    var mid = -1;
+    var high = -1;
     interval = setInterval(function() {
         var action = actions.pop();
         if (action) switch (action.type) {
@@ -66,6 +68,9 @@ function animateActions(actions) {
                 dataCopy[action.mid].state = STATES.minimal;
                 dataCopy[action.high].state = STATES.current;
                 redrawRects(dataCopy);
+                low = action.low;
+                mid = action.mid;
+                high = action.high;
                 break;
 
             case "unmark_boundary":
@@ -76,18 +81,26 @@ function animateActions(actions) {
                 break;
 
             case "compare":
-                if (oldLeft !== -1) {
+                if (oldLeft !== -1 && dataCopy[oldLeft].state === STATES.compare) {
                     dataCopy[oldLeft].state = STATES.default;
                 }
-                if (oldRight !== -1) {
+                if (oldRight !== -1 && dataCopy[oldRight].state === STATES.compare) {
                     dataCopy[oldRight].state = STATES.default;
                 }
 
-                dataCopy[action.left].state = STATES.compare;
-                dataCopy[action.right].state = STATES.compare;
+                if (dataCopy[action.left].state !== STATES.current
+                    && dataCopy[action.left].state !== STATES.minimal) {
 
-                oldLeft = action.left;
-                oldRight = action.right;
+                    dataCopy[action.left].state = STATES.compare;
+                    oldLeft = action.left;
+                }
+
+                if (dataCopy[action.right].state !== STATES.current
+                    && dataCopy[action.right].state !== STATES.minimal) {
+
+                    dataCopy[action.right].state = STATES.compare;
+                    oldRight = action.right;
+                }
 
                 redrawRects(dataCopy);
                 break;
@@ -97,6 +110,18 @@ function animateActions(actions) {
                     dataCopy[oldCopy].state = STATES.default;
                 }
 
+                if (dataCopy[oldLeft].state === STATES.compare) {
+                    dataCopy[oldLeft].state = STATES.default;
+                }
+
+                if (dataCopy[oldRight].state === STATES.compare) {
+                    dataCopy[oldRight].state = STATES.default;
+                }
+
+                dataCopy[low].state = STATES.default;
+                dataCopy[mid].state = STATES.default;
+                dataCopy[high].state = STATES.default;
+
                 dataCopy[action.ind].state = STATES.finished;
                 dataCopy[action.ind].num = action.val;
 
@@ -105,7 +130,6 @@ function animateActions(actions) {
                 break;
         }
         if (actions.length === 0) {
-            console.log("asdiasdasd");
             speed = DEFAULT_SPEED_MS;
             clearInterval(interval);
             $("#btn-sort").html("Sort");
