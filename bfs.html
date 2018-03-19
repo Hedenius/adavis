@@ -2,9 +2,159 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Adavis</title>
+
+    <link href="css/reset.css" type="text/css" rel="stylesheet">
+    <link href="css/bfs.css" type="text/css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container">
+        <a class="navbar-brand" href="#" style="font-size: 2em; font-family: Ubuntu"><img src="img/brand.png">Adavis</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topnavContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="topnavContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main role="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 pt-4">
+                <div class="list-group">
+                    <span data-toggle="collapse" data-target="#algorithms" class="list-group-item bg-light">Sorting</span>
+                    <div class="collapse" id="algorithms">
+                        <a href="selection.html" class="list-group-item">Selection Sort</a>
+                        <a href="quick.html" class="list-group-item">Quicksort</a>
+                        <a href="mergesort.html" class="list-group-item">Mergesort</a>
+                    </div>
+
+                    <span data-toggle="collapse" data-target="#datastructures" class="list-group-item bg-light">Graphs</span>
+                    <div class="collapse" id="datastructures">
+                        <a href="dijkstra.html" class="list-group-item">Dijkstra</a>
+                        <a href="bfs.html" class="list-group-item active">BFS</a>
+                        <a href="dfs.html" class="list-group-item">DFS</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="row flex-column-reverse flex-lg-row">
+                    <div class="col-lg-8 pt-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Breadth-First Search (BFS)
+                            </div>
+                            <div class="card-body">
+                                <div id="graph"></div>
+                            </div>
+                        </div>
+
+                        <div class="container pt-4">
+                            <h3>DBreadth-First Search</h3>
+                            <p>
+                                Breadth-first search (BFS) is an algorithm for traversing or searching tree or graph data structures.
+                                It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a 'search key')
+                                and explores the neighbor nodes first, before moving to the next level neighbours.
+
+                            </p>
+                            <p>
+
+                                BFS and its application in finding connected components of graphs were invented in 1945 by Konrad Zuse,
+                                in his (rejected) Ph.D. thesis on the Plankalkül programming language, but this was not published until 1972.
+                                It was reinvented in 1959 by Edward F. Moore, who used it to find the shortest path out of a maze, and later developed by C. Y.
+                                Lee into a wire routing algorithm (published 1961).
+
+                            </p>
+                            <p>
+                                Breadth first traversal is accomplished by enqueueing each level of a tree sequentially as the root of any subtree is encountered.
+                                There are 2 cases in the iterative algorithm.
+                            </p>
+
+                            <ul>
+                                <li>
+                                    Root case : The traversal queue is initially empty so the root node must be added before the general case.
+                                </li>
+
+                                <li>
+                                    General case: Process any items in the queue, while also expanding their children, stop if the queue was empty.
+                                    The general case will halt after processing the bottom level as leaf nodes have no children.
+                                </li>
+
+                            </ul>
+                            <p>
+                                Input: A search problem. A search-problem abstracts out the problem specific requirements from the actual search algorithm.
+                                Output: An ordered list of actions to be followed to reach from start state to the goal state.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 pt-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Controls
+                            </div>
+                            <div class="card-body" id="controls-card">
+
+                                <form class="m-2" id="prepare-graph">
+                                    <div class="form-group">
+                                        <label for="enter-speed-form">Animation speed</label>
+                                        <input type="text" class="form-control" id="enter-speed-form" placeholder="Default is 2000 ms">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dropdown-start">Choose start node</label>
+                                        <select class="form-control" id="dropdown-start">
+                                        </select>
+                                    </div>
+                                    <button id="find-paths-button" class="btn btn-primary">Find paths</button>
+                                    <button id="reset-button" class="btn btn-outline-primary m-2">Reset</button>
+                                </form>
+
+                                <form class="m-2 mt-4" id="show-shortest-path">
+                                    <div class="form-group">
+                                        <label for="dropdown-end">Choose end node</label>
+                                        <select class="form-control" id="dropdown-end">
+                                        </select>
+                                    </div>
+                                    <button id="show-path-button" class="btn btn-primary">Show path</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-light py-3 text-center text-muted border-top" style="font-size: 0.75em">
+    <span>Viktor Ekström, Alena Hramyka, Martin Winqvist</span>
+</footer>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/dijkstra.js"></script>
 
 </body>
 </html>
