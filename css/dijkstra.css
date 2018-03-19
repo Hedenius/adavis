@@ -17,7 +17,7 @@ html, body {
 }
 
 .active {
-    fill: #00468b;
+    fill: #3565A1;
 }
 
 .covered {
@@ -50,9 +50,13 @@ circle {
     stroke: white;
 }
 
-#graph {
-    height: 400px;
-}
+/*#graph {*/
+    /*position: fixed;*/
+    /*left: 0px;*/
+    /*right: 0px;*/
+    /*top: 0px;*/
+    /*bottom: 0px;*/
+/*}*/
 
 text {
     font: 10px sans-serif;
