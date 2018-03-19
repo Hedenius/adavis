@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="author" content="Viktor Ekström, Alena Hramyka, Martin Winqvist">
+    <meta name="description" content="Course assignment. Responsive website with data visualisation.
+    Behold the beauty of computer algorithms, with colours and shapes.">
     <title>Adavis</title>
+    <link rel="shortcut icon" href="img/brand.ico" typ="images/x-icon">
 
     <link href="css/reset.css" type="text/css" rel="stylesheet">
     <link href="css/dijkstra.css" type="text/css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
 </head>
 <body>
 
@@ -23,11 +27,7 @@
         <div class="collapse navbar-collapse" id="topnavContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
+                    <a class="nav-link" data-toggle="modal" data-target="#aboutModal" href="#">About</a>
                 </li>
             </ul>
         </div>
@@ -128,6 +128,35 @@
         </div>
     </div>
 </main>
+
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aboutModalLabel">Welcome to Adavis</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        This website was created as a group assignment for the course
+                        <i>Webbapplikationer för mobila enheter</i>, Malmö Högskola, spring 2018.
+                    </p>
+                    <p>
+                        It provides pedagogical and pleasant visualisation of several sorting and search algorithms. 
+                        It is implementing the <a href="https://d3js.org/">D3</a> JavaScript library, used for data visualisation.
+                    </p>
+                    <p>
+                        Created by students Viktor Ekström, Alena Hramyka and Martin Winqvist.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Enjoy</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <footer class="bg-light py-3 text-center text-muted border-top" style="font-size: 0.75em">
     <span>Viktor Ekström, Alena Hramyka, Martin Winqvist</span>
