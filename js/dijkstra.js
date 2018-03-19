@@ -1,10 +1,3 @@
-// http://bl.ocks.org/sathomas/11550728
-// https://stackoverflow.com/questions/28847443/adding-text-labels-to-force-directed-graph-links-in-d3-js
-// https://stackoverflow.com/questions/28050434/introducing-arrowdirected-in-force-directed-graph-d3
-// https://hackernoon.com/how-to-implement-dijkstras-algorithm-in-javascript-abdfd1702d04
-// https://stackoverflow.com/questions/37640027/add-text-label-to-d3-node-in-force-layout
-// http://bl.ocks.org/norrs/2883411
-
 const nodes = [
     {name: "A"}, // 0
     {name: "B"}, // 1
@@ -57,15 +50,35 @@ var distTo = [];
 var edgeTo = new Array(nodes.length);
 var edgeToIndexes = new Array(nodes.length);
 
+var enterSpeedField = $("#enter-speed-form");
+var dropdownStart = $("#dropdown-start");
+var dropdownEnd = $("#dropdown-end");
+
+var graphBuildTimerId;
+
+
 initControls();
 initSVG();
 
+window.addEventListener("resize", function() {
+    reset();
+});
+
+function reset() {
+    if (graphBuildTimerId !== null) {
+        clearInterval(graphBuildTimerId);
+        graphBuildTimerId = null;
+    }
+
+    initControls();
+    initSVG();
+}
+
 function initControls() {
 
-    var dropdownStart = $("#dropdown-start");
-    var dropdownEnd = $("#dropdown-end");
-    dropdownEnd.prop("disabled", "disabled");
-    var enterSpeedField = $("#enter-speed-form");
+    enableFindPaths();
+    disableShowPaths();
+
     for (var i in nodes) {
         dropdownStart.append(
             "<option>" + nodes[i].name +"</option>"
@@ -76,23 +89,20 @@ function initControls() {
     }
     dropdownEnd.val("M");
 
-    $("#prepare-graph").submit(function(ev) {
-        ev.preventDefault();
+    $("#find-paths-button").click(function() {
         speed = enterSpeedField.val(); // TODO: validate
         if (speed === "") {
             speed = 2000;
         }
         enterSpeedField.val(speed);
-
         start = findI(dropdownStart.val());
-        enterSpeedField.prop("disabled", "disabled");
-        dropdownStart.prop("disabled", "disabled");
-        dropdownEnd.removeAttr('disabled');
+        disableFindPaths();
         doDijkstraMagic();
     });
 
-    $("#show-shortest-path").submit(function(ev) {
-        ev.preventDefault();
+    $("#reset-button").click(reset);
+
+    $("#show-path-button").click(function() {
         end = findI(dropdownEnd.val());
         showPath();
     });
@@ -106,10 +116,36 @@ function initControls() {
     }
 }
 
+function disableFindPaths() {
+    enterSpeedField.prop("disabled", "disabled");
+    dropdownStart.prop("disabled", "disabled");
+    $("#find-paths-button").prop("disabled", true);
+}
+
+function enableFindPaths() {
+    enterSpeedField.removeAttr("disabled");
+    dropdownStart.removeAttr('disabled');
+    $("#find-paths-button").prop("disabled", false);
+}
+
+function disableShowPaths() {
+    dropdownEnd.prop("disabled", "disabled");
+    $("#show-path-button").prop("disabled", true);
+}
+
+function enableShowPaths() {
+    dropdownEnd.removeAttr('disabled');
+    $("#show-path-button").removeAttr("disabled");
+}
+
 function initSVG() {
+
     var graph = $("#graph");
-    var width = graph.width(),
-        height = graph.height();
+    graph.empty();
+    var width = graph.width();
+    graph.height(width);
+    var height = graph.width(); // make it square
+    console.log("Width: "  + width + ", height: " + height);
 
     var svg = d3.select('#graph').append('svg')
         .attr('width', width)
@@ -120,8 +156,8 @@ function initSVG() {
         .nodes(nodes)
         .links(edges);
 
-    force.linkDistance(50);
-    force.charge(-1500);
+    force.linkDistance(height/10);
+    force.charge(-(height * 3));
 
     svg.append("svg:defs").selectAll("marker")
         .data(["end"])      // Different link/path types can be defined here
@@ -129,7 +165,7 @@ function initSVG() {
         .append("svg:marker")    // This section adds in the arrows
         .attr("id", String)
         .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 15)
+        .attr("refX", width/40 + 3)
         .attr("refY", 0)
         .attr("markerWidth", 15)
         .attr("markerHeight", 15)
@@ -246,7 +282,6 @@ function doDijkstraMagic() {
     $("#node-"+nodes[start].name).css("stroke", "#006400").css("stroke-width", "4px");
 
     // Initialise all the distances with infinity, except the start, the distance to which is 0;
-
     for (var i=0; i < nodes.length; i++) {
         distTo[i] = Infinity;
     }
@@ -271,12 +306,13 @@ function doDijkstraMagic() {
         return nodeIndex; // node index from nodes
     }
 
-    var timerId = setInterval( function() {
+    graphBuildTimerId = setInterval( function() {
         if (queueNodes.length !== 0) {
             relax( findMin() );
         } else {
-            clearInterval(timerId);
-            $("#dropdown-end").removeAttr('disabled');
+            clearInterval(graphBuildTimerId);
+            enableShowPaths();
+            graphBuildTimerId = null;
         }
     }, speed);
 
@@ -296,10 +332,8 @@ function doDijkstraMagic() {
             var values = Object.values(adjacencyList);
         }
 
-        var intervalId;
         var counter = 0;
-
-        intervalId = setInterval( function () {
+        var pathFindTimedId = setInterval( function () {
             if (keys !== undefined && counter < keys.length) {
 
                 var target = keys[counter];
@@ -335,7 +369,7 @@ function doDijkstraMagic() {
                 console.log(JSON.stringify("Dist to array: " + distTo));
                 counter++;
             } else {
-                clearInterval(intervalId);
+                clearInterval(pathFindTimedId);
                 sourceEleement.attr("class", "node visited");
             }
         }, speed / 4 );
@@ -355,6 +389,7 @@ function showPath() {
     $("#node-"+nodes[start].name).css("stroke", "#006400").css("stroke-width", "4px");
     $("#node-"+nodes[end].name).css("stroke", "#8b0000").css("stroke-width", "4px");
     var controlsCard = $("#controls-card");
+
     $(".alert").remove();
 
     if (distTo[end] !== Infinity) {

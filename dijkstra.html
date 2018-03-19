@@ -39,18 +39,18 @@
         <div class="row">
             <div class="col-lg-3 pt-4">
                 <div class="list-group">
-                    <span data-toggle="collapse" data-target="#algorithms" class="list-group-item bg-light">Algorithms</span>
+                    <span data-toggle="collapse" data-target="#algorithms" class="list-group-item bg-light">Sorting</span>
                     <div class="collapse" id="algorithms">
-                        <a href="selection.html" class="list-group-item">Selection</a>
+                        <a href="selection.html" class="list-group-item">Selection Sort</a>
                         <a href="quick.html" class="list-group-item">Quicksort</a>
-                        <a href="dijkstra.html" class="list-group-item active">Dijkstra</a>
                         <a href="mergesort.html" class="list-group-item">Mergesort</a>
                     </div>
 
-                    <span data-toggle="collapse" data-target="#datastructures" class="list-group-item bg-light">Datastructures</span>
+                    <span data-toggle="collapse" data-target="#datastructures" class="list-group-item bg-light">Graphs</span>
                     <div class="collapse" id="datastructures">
-                        <a href="#" class="list-group-item">Stack</a>
-                        <a href="#" class="list-group-item">Queue</a>
+                        <a href="dijkstra.html" class="list-group-item active">Dijkstra</a>
+                        <a href="bfs.html" class="list-group-item">BFS</a>
+                        <a href="dfs.html" class="list-group-item">DFS</a>
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                     <div class="col-lg-8 pt-4">
                         <div class="card">
                             <div class="card-header">
-                                Dijkstra
+                                Dijkstra's Algorithm
                             </div>
                             <div class="card-body">
                                 <div id="graph"></div>
@@ -68,7 +68,7 @@
                         </div>
 
                         <div class="container pt-4">
-                            <h3>Dijkstra's Algorithm</h3>
+                            <h3>Dijkstra's Shortest Path Algorithm</h3>
                             <p>
                                 Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph, which may represent,
                                 for example, road networks. It was conceived by computer scientist Edsger W. Dijkstra in 1956 and published three years later.
@@ -100,15 +100,16 @@
 
                                 <form class="m-2" id="prepare-graph">
                                     <div class="form-group">
-                                        <label for="enter-speed-form">Enter speed</label>
-                                        <input type="text" class="form-control" id="enter-speed-form" placeholder="Default is 2000ms">
+                                        <label for="enter-speed-form">Animation speed</label>
+                                        <input type="text" class="form-control" id="enter-speed-form" placeholder="Default is 2000 ms">
                                     </div>
                                     <div class="form-group">
                                         <label for="dropdown-start">Choose start node</label>
                                         <select class="form-control" id="dropdown-start">
                                         </select>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Find paths</button>
+                                    <button id="find-paths-button" class="btn btn-primary">Find paths</button>
+                                    <button id="reset-button" class="btn btn-outline-primary m-2">Reset</button>
                                 </form>
 
                                 <form class="m-2 mt-4" id="show-shortest-path">
@@ -117,7 +118,7 @@
                                         <select class="form-control" id="dropdown-end">
                                         </select>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Show path</button>
+                                    <button id="show-path-button" class="btn btn-primary">Show path</button>
                                 </form>
 
                             </div>
