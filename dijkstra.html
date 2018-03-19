@@ -96,8 +96,30 @@
                             <div class="card-header">
                                 Controls
                             </div>
-                            <div class="card-body">
-                                User input
+                            <div class="card-body" id="controls-card">
+
+                                <form class="m-2" id="prepare-graph">
+                                    <div class="form-group">
+                                        <label for="enter-speed-form">Enter speed</label>
+                                        <input type="text" class="form-control" id="enter-speed-form" placeholder="Default is 2000ms">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dropdown-start">Choose start node</label>
+                                        <select class="form-control" id="dropdown-start">
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Find paths</button>
+                                </form>
+
+                                <form class="m-2 mt-4" id="show-shortest-path">
+                                    <div class="form-group">
+                                        <label for="dropdown-end">Choose end node</label>
+                                        <select class="form-control" id="dropdown-end">
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Show path</button>
+                                </form>
+
                             </div>
                         </div>
                     </div>
