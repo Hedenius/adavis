@@ -1,3 +1,7 @@
+const DEFAULT_SPEED_MS = 100;
+const DEFAULT_DATA_SIZE = 50;
+const MAX_DATA_SIZE = 100;
+
 const COLOR = {
     gray:   "#B7C4CF",
     blue:   "#3565A1",
@@ -97,6 +101,60 @@ function createDataset(items) {
     return dataset;
 }
 
+function validateUserInput() {
+    var res = true;
+
+    var $userInput = $("#user-input");
+    var $userCount = $("#user-count");
+    var $userSpeed = $("#user-speed");
+
+    var userInputVal = $userInput.val();
+    var userCountVal = $userCount.val();
+    var userSpeedVal = $userSpeed.val();
+
+    if (userInputVal === "") {
+        if (userCountVal === "") {
+            items = randomArray(DEFAULT_DATA_SIZE);
+            $userCount.removeClass("is-invalid");
+        }
+
+        if (userCountVal !== "") {
+            if (userCountVal > MAX_DATA_SIZE || userCountVal < 0) {
+                $userCount.addClass("is-invalid");
+                res = false;
+            }
+            else {
+                items = randomArray(userCountVal);
+                $userCount.removeClass("is-invalid");
+            }
+        }
+    }
+    else {
+        items = userInputVal.split(",").map(Number);
+        items = shuffle(items);
+        $userCount.val("");
+        $userCount.removeClass("is-invalid");
+    }
+
+    if (userSpeedVal === "") {
+        speed = DEFAULT_SPEED_MS;
+        $userSpeed.removeClass("is-invalid");
+    }
+
+    if (userSpeedVal !== "") {
+        if (userSpeedVal < 0) {
+            $userSpeed.addClass("is-invalid");
+            res = false;
+        }
+        else {
+            speed = userSpeedVal;
+            $userSpeed.removeClass("is-invalid");
+        }
+    }
+
+    return res;
+}
+
 // Fisher–Yates shuffle
 function shuffle(array) {
     var i = array.length, j, t;
@@ -128,5 +186,17 @@ function swap(items, firstIndex, secondIndex) {
     var temp = items[firstIndex];
     items[firstIndex] = items[secondIndex];
     items[secondIndex] = temp;
+}
+
+/**
+ * Displays the sorted array as a string, for fun.
+ */
+function setSortedString() {
+    var output = String(dataCopy[0].num);
+    for(var i = 1; i < dataCopy.length; i++) {
+        output = output.concat(",");
+        output = output.concat(dataCopy[i].num);
+    }
+    $("#user-input").val(output);
 }
 

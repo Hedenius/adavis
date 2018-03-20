@@ -68,29 +68,43 @@
                         <div class="container pt-4">
                             <h3>Mergesort</h3>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur fringilla purus sapien.
-                                Ut facilisis sapien a mi facilisis, nec volutpat lacus cursus.
-                                Sed malesuada urna nulla, sed eleifend tellus posuere sagittis.
-                                Nam a mollis purus. Nunc at dolor tristique, maximus nulla eu, consectetur leo.
-                                Pellentesque tincidunt tempor ex, pellentesque suscipit turpis tristique non.
-                                Etiam a pellentesque justo. Phasellus ut ex nec metus dictum posuere nec non mi.
-                                Proin eu gravida neque. Morbi varius tristique augue, id auctor mi eleifend sit amet.
-                                Praesent eu enim ac risus dapibus scelerisque. Nullam aliquet nulla a tellus euismod, quis ultricies ligula scelerisque.
-                                Sed nunc elit, venenatis non est in, euismod blandit massa. Etiam vehicula dictum metus et suscipit. Cras nec nibh purus.
-                                Sed viverra diam et placerat iaculis.
+                                Mergesort an efficient, general purpose, comparison-based sorting algorithm that uses the concepts of divide and conquer  and recursion to sort an array.
+                                It was invented by John von Neumann in 1945.
                             </p>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur fringilla purus sapien.
-                                Ut facilisis sapien a mi facilisis, nec volutpat lacus cursus.
-                                Sed malesuada urna nulla, sed eleifend tellus posuere sagittis.
-                                Nam a mollis purus. Nunc at dolor tristique, maximus nulla eu, consectetur leo.
-                                Pellentesque tincidunt tempor ex, pellentesque suscipit turpis tristique non.
-                                Etiam a pellentesque justo. Phasellus ut ex nec metus dictum posuere nec non mi.
-                                Proin eu gravida neque. Morbi varius tristique augue, id auctor mi eleifend sit amet.
-                                Praesent eu enim ac risus dapibus scelerisque. Nullam aliquet nulla a tellus euismod, quis ultricies ligula scelerisque.
-                                Sed nunc elit, venenatis non est in, euismod blandit massa. Etiam vehicula dictum metus et suscipit. Cras nec nibh purus.
-                                Sed viverra diam et placerat iaculis.
+                                Mergesort runs in a guaranteed <i>O(n log n)</i> time, which is significantly faster than the average and worst-case running times of several other sorting algorithms.
+                                Most implementations produce a stable sort, which means that the implementation preserves the input order of equal elements in the sorted output.
                             </p>
+                            <ol>
+                                <li>
+                                    <p>
+                                        <strong>Divide</strong> by finding the number <strong>mid</strong> of the position midway between <strong>low</strong> and <strong>high</strong>.
+                                        This is exactly the same as finding the midway in binary search: add low and high, divide by 2, and round down.
+                                    </p>
+                                    <p>
+                                        The <font color="#D55511">orange</font> bars represents the low and high values and shows the boundary of the current subarray.
+                                        For clarity the mid value is also shown as a <font color="#A42F11">red</font> bar.
+                                    </p>
+                                </li>
+
+                                <li>
+                                    <p><strong>Conquer</strong> by recursively sorting the subarrays in each of the two subproblems created by the divide step.
+                                        That is, recursively sort the subarray array[low..mid] and recursively sort the subarray array[mid+1..high].
+                                    </p>
+                                    <p>
+                                        Comparisons when sorting are shown as <font color="#74A82A">green</font> bars.
+                                    </p>
+                                </li>
+
+                                <li>
+                                    <p>
+                                        <strong>Combine</strong> by merging the two sorted subarrays back into the single sorted subarray array[low..high].
+                                    </p>
+                                    <p>
+                                        The <font color="#3565A1">blue</font> bar represents the current element that is merged back into the source array.
+                                    </p>
+                                </li>
+                            </ol>
                         </div>
                     </div>
 
@@ -101,13 +115,18 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="user-input">Number of elements</label>
+                                    <label for="user-input">User input</label>
                                     <input id="user-input" class="form-control" type="text" aria-describedby="input-help">
-                                    <small class="form-text text-muted" id="input-help">Number of elements in the array. Default is 50. Max is 100.</small>
+                                    <small class="form-text text-muted" id="input-help">List of numbers separated by commas. Leave blank for random.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-count">Number of elements</label>
+                                    <input id="user-count" class="form-control" type="number" aria-describedby="input-help">
+                                    <small class="form-text text-muted" id="count-help">Number of elements in the array. Default is 50. Max is 100.</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="user-speed">Animation speed</label>
-                                    <input id="user-speed" class="form-control" type="text" aria-describedby="speed-help">
+                                    <input id="user-speed" class="form-control" type="number" aria-describedby="speed-help">
                                     <small class="form-text text-muted" id="speed-help">Speed of the animation in milliseconds. Default is 100.</small>
                                 </div>
                                 <button id="btn-sort" class="btn btn-primary">Sort</button>
@@ -121,33 +140,33 @@
 </main>
 
 <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="aboutModalLabel">Welcome to Adavis</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        This website was created as a group assignment for the course
-                        <i>Webbapplikationer för mobila enheter</i>, Malmö Högskola, spring 2018.
-                    </p>
-                    <p>
-                        It provides pedagogical and pleasant visualisation of several sorting and search algorithms. 
-                        It is implementing the <a href="https://d3js.org/">D3</a> JavaScript library, used for data visualisation.
-                    </p>
-                    <p>
-                        Created by students Viktor Ekström, Alena Hramyka and Martin Winqvist.
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Enjoy</button>
-                </div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aboutModalLabel">Welcome to Adavis</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    This website was created as a group assignment for the course
+                    <i>Webbapplikationer för mobila enheter</i>, Malmö Högskola, spring 2018.
+                </p>
+                <p>
+                    It provides pedagogical and pleasant visualisation of several sorting and search algorithms.
+                    It is implementing the <a href="https://d3js.org/">D3</a> JavaScript library, used for data visualisation.
+                </p>
+                <p>
+                    Created by students Viktor Ekström, Alena Hramyka and Martin Winqvist.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Enjoy</button>
             </div>
         </div>
     </div>
+</div>
 
 <footer class="bg-light py-3 text-center text-muted border-top" style="font-size: 0.75em">
     <span>Viktor Ekström, Alena Hramyka, Martin Winqvist</span>

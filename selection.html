@@ -80,7 +80,7 @@
                             </p>
                             <p>
                                 When the inner loop, the <font color="#74A82A">green</font> bar, has found an element that is smaller than the one currently being 
-                                compared to the rest this element will be marked in <font color="#D55511">orange</font>. Whichever element is marked <font color="#D55511">orange</font> (the smallet)
+                                compared to the rest this element will be marked in <font color="#D55511">orange</font>. Whichever element is marked <font color="#D55511">orange</font> (the smallest)
                                 by the end of the inner loop will be swapped with the element it was compared to.
                             </p>
                             <p>
@@ -98,8 +98,12 @@
                                 <div class="form-group">
                                     <label for="user-input">User input</label>
                                     <input id="user-input" class="form-control" type="text" aria-describedby="input-help">
-                                    <small class="form-text text-muted" id="input-help">List of numbers separated by commas.
-                                        Leave blank for random.</small>
+                                    <small class="form-text text-muted" id="input-help">List of numbers separated by commas. Leave blank for random.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-count">Number of elements</label>
+                                    <input id="user-count" class="form-control" type="number" aria-describedby="input-help">
+                                    <small class="form-text text-muted" id="count-help">Number of elements in the array. Default is 50. Max is 100.</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="user-speed">Animation speed</label>
