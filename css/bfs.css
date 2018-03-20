@@ -16,10 +16,6 @@ html, body {
     fill: #32cd32;
 }
 
-.active {
-    fill: #228b22;
-}
-
 .covered {
     stroke: black;
 }

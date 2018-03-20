@@ -1,3 +1,6 @@
+const DEFAULT_SPEED = 2000;
+const DEFAULT_END = "M";
+
 const nodes = [
     {name: "A"}, // 0
     {name: "B"}, // 1
@@ -90,13 +93,13 @@ function initControls() {
             "<option>" + nodes[i].name +"</option>"
         );
     }
-    dropdownEnd.val("M");
+    dropdownEnd.val(DEFAULT_END);
 
     $("#prepare-graph").submit(function(e) {
         e.preventDefault();
         speed = enterSpeedField.val();
         if (speed === "") {
-            speed = 2000;
+            speed = DEFAULT_SPEED;
         }
         enterSpeedField.val(speed);
         start = findI(dropdownStart.val());
@@ -148,9 +151,8 @@ function initSVG() {
     var graph = $("#graph");
     graph.empty();
     var width = graph.width();
-    graph.height(width);
-    var height = graph.width(); // make it square
-    console.log("Width: "  + width + ", height: " + height);
+    graph.height(width); // make it square
+    var height = graph.width();
 
     var svg = d3.select('#graph').append('svg')
         .attr('width', width)
@@ -268,11 +270,11 @@ function makeGraph() {
         var weight = edges[i].weight;
         if (node in graph) {
             var temp = graph[ node ];
-            temp[ edge ] = weight;
-            graph[ node ] = temp;
+            temp[edge] = weight;
+            graph[node] = temp;
         } else {
-            graph[ node ]= {};
-            graph[ node ][ edge ] = weight;
+            graph[node]= {};
+            graph[node][edge] = weight;
         }
     }
     console.log(JSON.stringify(graph));

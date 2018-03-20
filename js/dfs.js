@@ -1,3 +1,6 @@
+const DEFAULT_SPEED = 2000;
+const DEFAULT_END = "Z";
+
 const nodes = [
     {name: "A", index: 0}, // 0
     {name: "B", index: 1}, // 1
@@ -99,6 +102,7 @@ var marked = new Array(26).fill(false);
 var enterSpeedField = $("#enter-speed-form");
 var dropdownStart = $("#dropdown-start");
 var dropdownEnd = $("#dropdown-end");
+var controlsCard = $("#controls-card");
 
 initControls();
 initSVG();
@@ -135,13 +139,13 @@ function initControls() {
             "<option>" + nodes[i].name +"</option>"
         );
     }
-    dropdownEnd.val("Z");
+    dropdownEnd.val(DEFAULT_END);
 
     $("#prepare-graph").submit(function(e) {
         e.preventDefault();
         speed = enterSpeedField.val();
         if (speed === "") {
-            speed = 500;
+            speed = DEFAULT_SPEED;
         }
         enterSpeedField.val(speed);
         start = findI(dropdownStart.val());
@@ -300,33 +304,36 @@ function makeGraph() {
 function doBFS() {
     graph = makeGraph();
 
-    console.log("#node-"+nodes[start].name);
-    $("#node-"+nodes[start].name).css("stroke", "#006400").css("stroke-width", "4px");
+    $("#node-"+nodes[start].name)
+        .css("stroke", "#006400")
+        .css("stroke-width", "4px")
+        .attr("class", "node visited");
 
     doRecursion(start);
     visualisePaths();
 
-    function doRecursion(previousNode) {
-        order.push(previousNode);
-        console.log(previousNode);
-        marked[previousNode] = true;
-        var adjacentNodes = graph[previousNode];
-        console.log("Current: " + nodes[previousNode].name);
+    function doRecursion(from){
+        order.push(from);
+        console.log(from);
+        marked[from] = true;
+        var adjacentNodes = graph[from];
+        console.log("Current: " + nodes[from].name);
         for (var adjNode in adjacentNodes) {
-            var realIndex = adjacentNodes[adjNode];
-            console.log("Covered: " + nodes[realIndex].name);
-            if (!marked[realIndex]) {
-                edgeTo[realIndex] = previousNode;
-                doRecursion(realIndex);
+            if (adjacentNodes.hasOwnProperty(adjNode)) {
+                var nextNode = adjacentNodes[adjNode];
+                console.log("Covered: " + nodes[nextNode].name);
+                if (!marked[nextNode]) {
+                    edgeTo[nextNode] = from;
+                    doRecursion(nextNode);
+                }
             }
         }
     }
 
-    console.log()
     console.log(order);
     console.log(JSON.stringify("Edge to; " + edgeTo));
 
-    function visualisePaths() { // cheating A LOT
+    function visualisePaths() {
         var traversalOrder = 0;
         var interval = setInterval( function () {
             if (order !== null && traversalOrder < 26) {
@@ -335,8 +342,8 @@ function doBFS() {
                 var currentNodesPrevious = edgeTo[ currentNode.index ];
                 if (currentNodesPrevious !== undefined) {
                     var previousNode = nodes[currentNodesPrevious];
-                    $("#node-"+ currentNode.name).attr("class", "node visited"); // visited
-                    $("#edge-"+ previousNode.name + currentNode.name).attr("class", "covered"); // active edge
+                    $("#node-"+ currentNode.name).attr("class", "node visited");
+                    $("#edge-"+ previousNode.name + currentNode.name).attr("class", "covered");
                 }
                 traversalOrder++;
             } else {
@@ -352,8 +359,6 @@ function showPath() {
     $(".node").css("stroke", "white").css("stroke-width", "2px");
     $("#node-"+nodes[start].name).css("stroke", "#006400").css("stroke-width", "4px");
     $("#node-"+nodes[end].name).css("stroke", "#8b0000").css("stroke-width", "4px");
-    var controlsCard = $("#controls-card");
-
     $(".alert").remove();
 
     if (marked[end]) {
@@ -387,6 +392,7 @@ function extractPath() {
             $("#edge-"+ nodes[start].name + nodeName).attr("class", "path-edge");
         }
     }
+
     string += nodes[start].name;
     console.log("Path: " + string);
     return string;
