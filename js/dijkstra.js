@@ -1,10 +1,3 @@
-// http://bl.ocks.org/sathomas/11550728
-// https://stackoverflow.com/questions/28847443/adding-text-labels-to-force-directed-graph-links-in-d3-js
-// https://stackoverflow.com/questions/28050434/introducing-arrowdirected-in-force-directed-graph-d3
-// https://hackernoon.com/how-to-implement-dijkstras-algorithm-in-javascript-abdfd1702d04
-// https://stackoverflow.com/questions/37640027/add-text-label-to-d3-node-in-force-layout
-// http://bl.ocks.org/norrs/2883411
-
 const nodes = [
     {name: "A"}, // 0
     {name: "B"}, // 1
@@ -22,22 +15,22 @@ const nodes = [
 ];
 
 const edges = [
-    {source: nodes[0], target: nodes[1], weight: 85}, // A -- B
-    {source: nodes[0], target: nodes[2], weight: 217}, // A -- C
-    {source: nodes[0], target: nodes[4], weight: 173}, // A -- D
-    {source: nodes[1], target: nodes[10], weight: 73}, // B
-    {source: nodes[1], target: nodes[4], weight: 2}, // B
-    {source: nodes[2], target: nodes[3], weight: 186}, // C -- G
-    {source: nodes[2], target: nodes[7], weight: 103}, // C -- E
-    {source: nodes[3], target: nodes[7], weight: 183}, // D
-    {source: nodes[4], target: nodes[5], weight: 502}, // D
-    {source: nodes[5], target: nodes[8], weight: 250}, // F
-    {source: nodes[5], target: nodes[11], weight: 217}, // F
+    {source: nodes[0], target: nodes[1], weight: 85},
+    {source: nodes[0], target: nodes[2], weight: 217},
+    {source: nodes[0], target: nodes[4], weight: 173},
+    {source: nodes[1], target: nodes[10], weight: 73},
+    {source: nodes[1], target: nodes[4], weight: 2},
+    {source: nodes[2], target: nodes[3], weight: 186},
+    {source: nodes[2], target: nodes[7], weight: 103},
+    {source: nodes[3], target: nodes[7], weight: 183},
+    {source: nodes[4], target: nodes[5], weight: 502},
+    {source: nodes[5], target: nodes[8], weight: 250},
+    {source: nodes[5], target: nodes[11], weight: 217},
     {source: nodes[6], target: nodes[8], weight: 29},
     {source: nodes[6], target: nodes[9], weight: 5},
-    {source: nodes[7], target: nodes[9], weight: 167}, // H
+    {source: nodes[7], target: nodes[9], weight: 167},
     {source: nodes[7], target: nodes[6], weight: 73},
-    {source: nodes[9], target: nodes[0], weight: 40}, // J
+    {source: nodes[9], target: nodes[0], weight: 40},
     {source: nodes[9], target: nodes[5], weight: 70},
     {source: nodes[9], target: nodes[8], weight: 18},
     {source: nodes[10], target: nodes[2], weight: 870},
@@ -57,15 +50,38 @@ var distTo = [];
 var edgeTo = new Array(nodes.length);
 var edgeToIndexes = new Array(nodes.length);
 
+var enterSpeedField = $("#enter-speed-form");
+var dropdownStart = $("#dropdown-start");
+var dropdownEnd = $("#dropdown-end");
+
+
 initControls();
 initSVG();
 
+window.addEventListener("resize", function() {
+    reset();
+});
+
+function reset() {
+    distTo = [];
+    edgeTo = new Array(nodes.length);
+    edgeToIndexes = new Array(nodes.length);
+    graph = null;
+    cleanControls();
+    initSVG();
+}
+
+function cleanControls() {
+    $(".alert").remove();
+    enableFindPaths();
+    disableShowPaths();
+}
+
 function initControls() {
 
-    var dropdownStart = $("#dropdown-start");
-    var dropdownEnd = $("#dropdown-end");
-    dropdownEnd.prop("disabled", "disabled");
-    var enterSpeedField = $("#enter-speed-form");
+    enableFindPaths();
+    disableShowPaths();
+
     for (var i in nodes) {
         dropdownStart.append(
             "<option>" + nodes[i].name +"</option>"
@@ -76,23 +92,22 @@ function initControls() {
     }
     dropdownEnd.val("M");
 
-    $("#prepare-graph").submit(function(ev) {
-        ev.preventDefault();
-        speed = enterSpeedField.val(); // TODO: validate
+    $("#prepare-graph").submit(function(e) {
+        e.preventDefault();
+        speed = enterSpeedField.val();
         if (speed === "") {
             speed = 2000;
         }
         enterSpeedField.val(speed);
-
         start = findI(dropdownStart.val());
-        enterSpeedField.prop("disabled", "disabled");
-        dropdownStart.prop("disabled", "disabled");
-        dropdownEnd.removeAttr('disabled');
+        disableFindPaths();
         doDijkstraMagic();
     });
 
-    $("#show-shortest-path").submit(function(ev) {
-        ev.preventDefault();
+    $("#reset-button").click(reset);
+
+    $("#show-shortest-path").submit(function(e) {
+        e.preventDefault();
         end = findI(dropdownEnd.val());
         showPath();
     });
@@ -106,10 +121,36 @@ function initControls() {
     }
 }
 
+function disableFindPaths() {
+    enterSpeedField.prop("disabled", "disabled");
+    dropdownStart.prop("disabled", "disabled");
+    $("#find-paths-button").prop("disabled", true);
+}
+
+function enableFindPaths() {
+    enterSpeedField.removeAttr("disabled");
+    dropdownStart.removeAttr('disabled');
+    $("#find-paths-button").prop("disabled", false);
+}
+
+function disableShowPaths() {
+    dropdownEnd.prop("disabled", "disabled");
+    $("#show-path-button").prop("disabled", true);
+}
+
+function enableShowPaths() {
+    dropdownEnd.removeAttr('disabled');
+    $("#show-path-button").removeAttr("disabled");
+}
+
 function initSVG() {
+
     var graph = $("#graph");
-    var width = graph.width(),
-        height = graph.height();
+    graph.empty();
+    var width = graph.width();
+    graph.height(width);
+    var height = graph.width(); // make it square
+    console.log("Width: "  + width + ", height: " + height);
 
     var svg = d3.select('#graph').append('svg')
         .attr('width', width)
@@ -120,8 +161,8 @@ function initSVG() {
         .nodes(nodes)
         .links(edges);
 
-    force.linkDistance(50);
-    force.charge(-1500);
+    force.linkDistance(height/10);
+    force.charge(-(height * 3));
 
     svg.append("svg:defs").selectAll("marker")
         .data(["end"])      // Different link/path types can be defined here
@@ -129,7 +170,7 @@ function initSVG() {
         .append("svg:marker")    // This section adds in the arrows
         .attr("id", String)
         .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 15)
+        .attr("refX", width/40 + 3)
         .attr("refY", 0)
         .attr("markerWidth", 15)
         .attr("markerHeight", 15)
@@ -246,7 +287,6 @@ function doDijkstraMagic() {
     $("#node-"+nodes[start].name).css("stroke", "#006400").css("stroke-width", "4px");
 
     // Initialise all the distances with infinity, except the start, the distance to which is 0;
-
     for (var i=0; i < nodes.length; i++) {
         distTo[i] = Infinity;
     }
@@ -271,16 +311,21 @@ function doDijkstraMagic() {
         return nodeIndex; // node index from nodes
     }
 
-    var timerId = setInterval( function() {
-        if (queueNodes.length !== 0) {
+    var graphBuildTimerId = setInterval( function() {
+        if (graph === null) {
+            clearInterval(graphBuildTimerId);
+        } else if (queueNodes.length !== 0) {
             relax( findMin() );
         } else {
-            clearInterval(timerId);
-            $("#dropdown-end").removeAttr('disabled');
+            clearInterval(graphBuildTimerId);
+            enableShowPaths();
         }
     }, speed);
 
     function relax(index) {
+        if (graph == null) {
+            return;
+        }
         console.log(index);
 
         var source = nodes[index].name;
@@ -296,11 +341,10 @@ function doDijkstraMagic() {
             var values = Object.values(adjacencyList);
         }
 
-        var intervalId;
         var counter = 0;
-
-        intervalId = setInterval( function () {
-            if (keys !== undefined && counter < keys.length) {
+        var pathFindTimedId = setInterval( function () {
+            if (graph !== null &&
+                keys !== undefined && counter < keys.length) {
 
                 var target = keys[counter];
                 console.log(JSON.stringify("TARGET: " + target));
@@ -335,7 +379,7 @@ function doDijkstraMagic() {
                 console.log(JSON.stringify("Dist to array: " + distTo));
                 counter++;
             } else {
-                clearInterval(intervalId);
+                clearInterval(pathFindTimedId);
                 sourceEleement.attr("class", "node visited");
             }
         }, speed / 4 );
@@ -355,6 +399,7 @@ function showPath() {
     $("#node-"+nodes[start].name).css("stroke", "#006400").css("stroke-width", "4px");
     $("#node-"+nodes[end].name).css("stroke", "#8b0000").css("stroke-width", "4px");
     var controlsCard = $("#controls-card");
+
     $(".alert").remove();
 
     if (distTo[end] !== Infinity) {

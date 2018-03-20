@@ -13,29 +13,19 @@ html, body {
 }
 
 .visited {
-    fill: #b2b200;
+    fill: #32cd32;
 }
 
 .active {
-    fill: #3565A1;
+    fill: #228b22;
 }
 
 .covered {
     stroke: black;
 }
 
-.shortest {
+.path-edge {
     stroke: #ffa500;
-}
-
-marker {
-    stroke: #585858;
-    fill: #585858;
-}
-
-text {
-    stroke: #74A82A;
-    font: 8px sans-serif;
 }
 
 circle {
@@ -48,9 +38,4 @@ circle {
     pointer-events: none;
     font: 8px sans-serif;
     stroke: white;
-}
-
-text {
-    font: 10px sans-serif;
-    pointer-events: none
 }

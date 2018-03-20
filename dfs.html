@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="Viktor Ekström, Alena Hramyka, Martin Winqvist">
-    <meta name="description" content="Course assignment. Responsive website with data visualisation.
-    Behold the beauty of computer algorithms, with colours and shapes.">
-    <title>Adavis</title>
-    <link rel="shortcut icon" href="img/brand.ico" typ="images/x-icon">
 
-    <link href="css/dijkstra.css" type="text/css" rel="stylesheet">
+    <title>Adavis</title>
+
+    <link href="css/dfs.css" type="text/css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/main.css" rel="stylesheet">
 </head>
 <body>
 
@@ -26,7 +22,11 @@
         <div class="collapse navbar-collapse" id="topnavContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="modal" data-target="#aboutModal" href="#">About</a>
+                    <a class="nav-link" href="#">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
                 </li>
             </ul>
         </div>
@@ -47,9 +47,9 @@
 
                     <span data-toggle="collapse" data-target="#datastructures" class="list-group-item bg-light">Graphs</span>
                     <div class="collapse" id="datastructures">
-                        <a href="dijkstra.html" class="list-group-item active">Dijkstra</a>
+                        <a href="dijkstra.html" class="list-group-item">Dijkstra</a>
                         <a href="bfs.html" class="list-group-item">BFS</a>
-                        <a href="dfs.html" class="list-group-item">DFS</a>
+                        <a href="dfs.html" class="list-group-item active">DFS</a>
                     </div>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                     <div class="col-lg-8 pt-4">
                         <div class="card">
                             <div class="card-header">
-                                Dijkstra's Algorithm
+                                Depth-First Search (DFS)
                             </div>
                             <div class="card-body">
                                 <div id="graph"></div>
@@ -67,25 +67,23 @@
                         </div>
 
                         <div class="container pt-4">
-                            <h3>Dijkstra's Shortest Path Algorithm</h3>
+                            <h3>Depth-First Search</h3>
                             <p>
-                                Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph, which may represent,
-                                for example, road networks. It was conceived by computer scientist Edsger W. Dijkstra in 1956 and published three years later.
+                                Depth-first search (DFS) is an algorithm for traversing or searching tree or graph data structures.
+                                One starts at the root (selecting some arbitrary node as the root in the case of a graph) and explores as far as
+                                possible along each branch before backtracking.
                             </p>
                             <p>
-                                The algorithm exists in many variants; Dijkstra's original variant found the shortest path between two nodes,
-                                but a more common variant fixes a single node as the "source" node and finds shortest paths from the source to
-                                all other nodes in the graph, producing a shortest-path tree.
+                                A version of depth-first search was investigated in the 19th century by French mathematician Charles Pierre Trémaux
+                                as a strategy for solving mazes.
                             </p>
                             <p>
-                                For a given source node in the graph, the algorithm finds the shortest path between that node and every other.
-                                It can also be used for finding the shortest paths from a single node to a single destination node by stopping
-                                the algorithm once the shortest path to the destination node has been determined. For example, if the nodes of
-                                the graph represent cities and edge path costs represent driving distances between pairs of cities connected by
-                                a direct road, Dijkstra's algorithm can be used to find the shortest route between one city and all other cities.
-                                As a result, the shortest path algorithm is widely used in network routing protocols, most notably IS-IS
-                                (Intermediate System to Intermediate System) and Open Shortest Path First (OSPF). It is also employed as a subroutine
-                                in other algorithms such as Johnson's.
+                                The time and space analysis of DFS differs according to its application area. In theoretical computer science, DFS is
+                                typically used to traverse an entire graph, and takes time Θ(|V| + |E|), linear in the size of the graph.
+                                In these applications it also uses space O(|V|) in the worst case to store the stack of vertices on the current search
+                                path as well as the set of already-visited vertices. Thus, in this setting, the time and space bounds are the same as for
+                                breadth-first search and the choice of which of these two algorithms to use depends less on their complexity and more on
+                                the different properties of the vertex orderings the two algorithms produce.
                             </p>
                         </div>
                     </div>
@@ -100,7 +98,7 @@
                                 <form class="m-2" id="prepare-graph">
                                     <div class="form-group">
                                         <label for="enter-speed-form">Animation speed</label>
-                                        <input type="text" class="form-control" id="enter-speed-form" placeholder="Default is 2000 ms">
+                                        <input type="text" class="form-control" id="enter-speed-form" placeholder="Default is 500 ms">
                                     </div>
                                     <div class="form-group">
                                         <label for="dropdown-start">Choose start node</label>
@@ -110,7 +108,6 @@
                                     <button type="submit" id="find-paths-button" class="btn btn-primary">Find paths</button>
                                     <button type="button" id="reset-button" class="btn btn-outline-primary m-2">Reset</button>
                                 </form>
-
                                 <form class="m-2 mt-4" id="show-shortest-path">
                                     <div class="form-group">
                                         <label for="dropdown-end">Choose end node</label>
@@ -119,7 +116,6 @@
                                     </div>
                                     <button type="submit" id="show-path-button" class="btn btn-primary">Show path</button>
                                 </form>
-
                             </div>
                         </div>
                     </div>
@@ -128,35 +124,6 @@
         </div>
     </div>
 </main>
-
-<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="aboutModalLabel">Welcome to Adavis</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        This website was created as a group assignment for the course
-                        <i>Webbapplikationer för mobila enheter</i>, Malmö Högskola, spring 2018.
-                    </p>
-                    <p>
-                        It provides pedagogical and pleasant visualisation of several sorting and search algorithms. 
-                        It is implementing the <a href="https://d3js.org/">D3</a> JavaScript library, used for data visualisation.
-                    </p>
-                    <p>
-                        Created by students Viktor Ekström, Alena Hramyka and Martin Winqvist.
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Enjoy</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 <footer class="bg-light py-3 text-center text-muted border-top" style="font-size: 0.75em">
     <span>Viktor Ekström, Alena Hramyka, Martin Winqvist</span>
@@ -167,7 +134,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
-<script src="js/dijkstra.js"></script>
+<script src="js/dfs.js"></script>
 
 </body>
 </html>

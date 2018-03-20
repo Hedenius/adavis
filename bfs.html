@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="Viktor Ekström, Alena Hramyka, Martin Winqvist">
-    <meta name="description" content="Course assignment. Responsive website with data visualisation.
-    Behold the beauty of computer algorithms, with colours and shapes.">
-    <title>Adavis</title>
-    <link rel="shortcut icon" href="img/brand.ico" typ="images/x-icon">
 
-    <link href="css/dijkstra.css" type="text/css" rel="stylesheet">
+    <title>Adavis</title>
+
+    <link href="css/bfs.css" type="text/css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/main.css" rel="stylesheet">
 </head>
 <body>
 
@@ -26,7 +22,11 @@
         <div class="collapse navbar-collapse" id="topnavContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="modal" data-target="#aboutModal" href="#">About</a>
+                    <a class="nav-link" href="#">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
                 </li>
             </ul>
         </div>
@@ -47,8 +47,8 @@
 
                     <span data-toggle="collapse" data-target="#datastructures" class="list-group-item bg-light">Graphs</span>
                     <div class="collapse" id="datastructures">
-                        <a href="dijkstra.html" class="list-group-item active">Dijkstra</a>
-                        <a href="bfs.html" class="list-group-item">BFS</a>
+                        <a href="dijkstra.html" class="list-group-item">Dijkstra</a>
+                        <a href="bfs.html" class="list-group-item active">BFS</a>
                         <a href="dfs.html" class="list-group-item">DFS</a>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                     <div class="col-lg-8 pt-4">
                         <div class="card">
                             <div class="card-header">
-                                Dijkstra's Algorithm
+                                Breadth-First Search (BFS)
                             </div>
                             <div class="card-body">
                                 <div id="graph"></div>
@@ -67,25 +67,40 @@
                         </div>
 
                         <div class="container pt-4">
-                            <h3>Dijkstra's Shortest Path Algorithm</h3>
+                            <h3>Breadth-First Search</h3>
                             <p>
-                                Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph, which may represent,
-                                for example, road networks. It was conceived by computer scientist Edsger W. Dijkstra in 1956 and published three years later.
+                                Breadth-first search (BFS) is an algorithm for traversing or searching tree or graph data structures.
+                                It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a 'search key')
+                                and explores the neighbor nodes first, before moving to the next level neighbours.
+
                             </p>
                             <p>
-                                The algorithm exists in many variants; Dijkstra's original variant found the shortest path between two nodes,
-                                but a more common variant fixes a single node as the "source" node and finds shortest paths from the source to
-                                all other nodes in the graph, producing a shortest-path tree.
+
+                                BFS and its application in finding connected components of graphs were invented in 1945 by Konrad Zuse,
+                                in his (rejected) Ph.D. thesis on the Plankalkül programming language, but this was not published until 1972.
+                                It was reinvented in 1959 by Edward F. Moore, who used it to find the shortest path out of a maze, and later developed by C. Y.
+                                Lee into a wire routing algorithm (published 1961).
+
                             </p>
                             <p>
-                                For a given source node in the graph, the algorithm finds the shortest path between that node and every other.
-                                It can also be used for finding the shortest paths from a single node to a single destination node by stopping
-                                the algorithm once the shortest path to the destination node has been determined. For example, if the nodes of
-                                the graph represent cities and edge path costs represent driving distances between pairs of cities connected by
-                                a direct road, Dijkstra's algorithm can be used to find the shortest route between one city and all other cities.
-                                As a result, the shortest path algorithm is widely used in network routing protocols, most notably IS-IS
-                                (Intermediate System to Intermediate System) and Open Shortest Path First (OSPF). It is also employed as a subroutine
-                                in other algorithms such as Johnson's.
+                                Breadth first traversal is accomplished by enqueueing each level of a tree sequentially as the root of any subtree is encountered.
+                                There are 2 cases in the iterative algorithm:
+                            </p>
+
+                            <ul style="list-style: decimal inside !important">
+                                <li style="display: list-item !important">
+                                    <strong>Root case</strong>: The traversal queue is initially empty so the root node must be added before the general case.
+                                </li>
+                                <li style="display: list-item !important">
+                                    <strong>General case</strong>: Process any items in the queue, while also expanding their children, stop if the queue was empty.
+                                    The general case will halt after processing the bottom level as leaf nodes have no children.
+                                </li>
+                            </ul>
+                            <p>
+                                <strong>Input</strong>: A <em>search problem</em>. A search-problem abstracts out the problem specific requirements from the actual search algorithm.
+                            </p>
+                            <p>
+                                <strong>Output</strong>: An ordered list of actions to be followed to reach from start state to the goal state.
                             </p>
                         </div>
                     </div>
@@ -110,7 +125,6 @@
                                     <button type="submit" id="find-paths-button" class="btn btn-primary">Find paths</button>
                                     <button type="button" id="reset-button" class="btn btn-outline-primary m-2">Reset</button>
                                 </form>
-
                                 <form class="m-2 mt-4" id="show-shortest-path">
                                     <div class="form-group">
                                         <label for="dropdown-end">Choose end node</label>
@@ -119,7 +133,6 @@
                                     </div>
                                     <button type="submit" id="show-path-button" class="btn btn-primary">Show path</button>
                                 </form>
-
                             </div>
                         </div>
                     </div>
@@ -128,35 +141,6 @@
         </div>
     </div>
 </main>
-
-<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="aboutModalLabel">Welcome to Adavis</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        This website was created as a group assignment for the course
-                        <i>Webbapplikationer för mobila enheter</i>, Malmö Högskola, spring 2018.
-                    </p>
-                    <p>
-                        It provides pedagogical and pleasant visualisation of several sorting and search algorithms. 
-                        It is implementing the <a href="https://d3js.org/">D3</a> JavaScript library, used for data visualisation.
-                    </p>
-                    <p>
-                        Created by students Viktor Ekström, Alena Hramyka and Martin Winqvist.
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Enjoy</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 <footer class="bg-light py-3 text-center text-muted border-top" style="font-size: 0.75em">
     <span>Viktor Ekström, Alena Hramyka, Martin Winqvist</span>
@@ -167,7 +151,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
-<script src="js/dijkstra.js"></script>
+<script src="js/bfs.js"></script>
 
 </body>
 </html>
