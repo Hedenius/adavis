@@ -41,8 +41,8 @@
                     <div class="collapse" id="algorithms">
                         <a href="selection.html" class="list-group-item">Selection Sort</a>
                         <a href="quick.html" class="list-group-item">Quicksort</a>
-                        <a href="mergesort.html" class="list-group-item active">Mergesort</a>
-                        <a href="bubble.html" class="list-group-item">Bubble sort</a>
+                        <a href="mergesort.html" class="list-group-item">Mergesort</a>
+                        <a href="bubble.html" class="list-group-item active">Bubble sort</a>
                     </div>
 
                     <span data-toggle="collapse" data-target="#datastructures" class="list-group-item bg-light">Graphs</span>
@@ -59,7 +59,7 @@
                     <div class="col-lg-8 pt-4">
                         <div class="card">
                             <div class="card-header">
-                                Mergesort
+                                Bubblesort
                             </div>
                             <div id="content-card" class="card-body">
                                 <div id="chart"></div>
@@ -67,45 +67,28 @@
                         </div>
 
                         <div class="container pt-4">
-                            <h3>Mergesort</h3>
+                            <h3>Bubblesort</h3>
                             <p>
-                                Mergesort is an efficient, general purpose, comparison-based sorting algorithm that uses the concepts of divide and conquer  and recursion to sort an array.
-                                It was invented by John von Neumann in 1945.
+                                Bubble sort, sometimes referred to as sinking sort, is a simple sorting algorithm that repeatedly steps through the list to be sorted,
+                                compares each pair of adjacent items and swaps them if they are in the wrong order. The pass through the list is repeated until no swaps are needed,
+                                which indicates that the list is sorted. The algorithm, which is a comparison sort, is named for the way smaller or larger elements "bubble" to the top of the list.
+                                Although the algorithm is simple, it is too slow and impractical for most problems even when compared to insertion sort.
+                                It can be practical if the input is usually in sorted order but may occasionally have some out-of-order elements nearly in position.
                             </p>
                             <p>
-                                Mergesort runs in a guaranteed <i>O(n log n)</i> time, which is significantly faster than the average and worst-case running times of several other sorting algorithms.
-                                Most implementations produce a stable sort, which means that the implementation preserves the input order of equal elements in the sorted output.
+                                Bubble sort has worst-case and average complexity of any sorting algorithm, with both being <i>О(n<sup>2</sup>)</i>, where n is the number of items being sorted.
+                                There exist many sorting algorithms, such as merge sort with substantially better worst-case or average complexity of <i>O(n log n)</i>.
+                                Even other <i>О(n<sup>2</sup>)</i> sorting algorithms, such as insertion sort, tend to have better performance than bubble sort.
+                                Therefore, bubble sort is not a practical sorting algorithm when n is large.
                             </p>
-                            <ol>
-                                <li>
-                                    <p>
-                                        <strong>Divide</strong> by finding the number <strong>mid</strong> of the position midway between <strong>low</strong> and <strong>high</strong>.
-                                        This is exactly the same as finding the midway in binary search: add low and high, divide by 2, and round down.
-                                    </p>
-                                    <p>
-                                        The <font color="#D55511">orange</font> bars represents the low and high values and shows the boundary of the current subarray.
-                                        For clarity the mid value is also shown as a <font color="#A42F11">red</font> bar.
-                                    </p>
-                                </li>
-
-                                <li>
-                                    <p><strong>Conquer</strong> by recursively sorting the subarrays in each of the two subproblems created by the divide step.
-                                        That is, recursively sort the subarray array[low..mid] and recursively sort the subarray array[mid+1..high].
-                                    </p>
-                                    <p>
-                                        Comparisons when sorting are shown as <font color="#74A82A">green</font> bars.
-                                    </p>
-                                </li>
-
-                                <li>
-                                    <p>
-                                        <strong>Combine</strong> by merging the two sorted subarrays back into the single sorted subarray array[low..high].
-                                    </p>
-                                    <p>
-                                        The <font color="#3565A1">blue</font> bar represents the current element that is merged back into the source array.
-                                    </p>
-                                </li>
-                            </ol>
+                            <p>
+                                The only significant advantage that bubble sort has over most other implementations, even quicksort, but not insertion sort,
+                                is that the ability to detect that the list is sorted efficiently is built into the algorithm.
+                                When the list is already sorted (best-case), the complexity of bubble sort is only <i>O(n)</i>. By contrast, most other algorithms,
+                                even those with better average-case complexity, perform their entire sorting process on the set and thus are more complex.
+                                However, not only does insertion sort have this mechanism too, but it also performs better on a list that is substantially sorted (having a small number of inversions).
+                                Bubble sort should be avoided in the case of large collections. It will not be efficient in the case of a reverse-ordered collection.
+                            </p>
                         </div>
                     </div>
 
@@ -179,7 +162,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/common.js"></script>
-<script src="js/mergesort.js"></script>
+<script src="js/bubblesort.js"></script>
 
 </body>
 </html>
