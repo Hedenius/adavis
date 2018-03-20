@@ -1,3 +1,6 @@
+const DEFAULT_SPEED = 2000;
+const DEFAULT_END = "Z";
+
 const nodes = [
     {name: "A", index: 0}, // 0
     {name: "B", index: 1}, // 1
@@ -53,8 +56,6 @@ const edges = [
     {source: nodes[12], target: nodes[4]},
     {source: nodes[12], target: nodes[1]},
     {source: nodes[12], target: nodes[5]},
-
-
     {source: nodes[13], target: nodes[24]},
     {source: nodes[13], target: nodes[0]},
     {source: nodes[14], target: nodes[17]},
@@ -66,7 +67,6 @@ const edges = [
     {source: nodes[17], target: nodes[11]},
     {source: nodes[18], target: nodes[4]},
     {source: nodes[18], target: nodes[2]},
-
     {source: nodes[19], target: nodes[14]},
     {source: nodes[19], target: nodes[16]},
     {source: nodes[19], target: nodes[10]},
@@ -81,9 +81,9 @@ const edges = [
     {source: nodes[23], target: nodes[16]},
     {source: nodes[23], target: nodes[18]},
     {source: nodes[24], target: nodes[20]},
+    {source: nodes[24], target: nodes[2]},
     {source: nodes[25], target: nodes[19]},
     {source: nodes[25], target: nodes[21]},
-
 ];
 
 var speed; // user-defined
@@ -93,11 +93,12 @@ var end; // user-defined
 // algo-specific
 var graph;
 var edgeTo = new Array(nodes.length);
-var marked = new Array(26).fill(false);
+var marked = new Array(nodes.length).fill(false);
 
 var enterSpeedField = $("#enter-speed-form");
 var dropdownStart = $("#dropdown-start");
 var dropdownEnd = $("#dropdown-end");
+var controlsCard = $("#controls-card");
 
 initControls();
 initSVG();
@@ -134,17 +135,17 @@ function initControls() {
             "<option>" + nodes[i].name +"</option>"
         );
     }
-    dropdownEnd.val("Z");
+    dropdownEnd.val(DEFAULT_END);
 
     $("#prepare-graph").submit(function(e) {
         e.preventDefault();
         speed = enterSpeedField.val();
         if (speed === "") {
-            speed = 2000;
+            speed = DEFAULT_SPEED;
         }
-        console.log("SPEEEEEED" + speed);
         enterSpeedField.val(speed);
         start = findI(dropdownStart.val());
+
         disableFindPaths();
         doBFS();
     });
@@ -193,9 +194,8 @@ function initSVG() {
     var graph = $("#graph");
     graph.empty();
     var width = graph.width();
-    graph.height(width);
+    graph.height(width); // make it square
     var height = graph.width(); // make it square
-    console.log("Width: "  + width + ", height: " + height);
 
     var svg = d3.select('#graph').append('svg')
         .attr('width', width)
@@ -304,10 +304,13 @@ function doBFS() {
     marked[start] = true;
 
     console.log("#node-"+nodes[start].name);
-    $("#node-"+ nodes[start].name).css("stroke", "#006400").css("stroke-width", "4px");
+    $("#node-"+ nodes[start].name)
+        .css("stroke", "#ff4c4c")
+        .css("stroke-width", "4px")
+        .attr("class", "node visited");
 
     var graphBuildTimerId = setInterval( function() {
-        if (graph === null) {
+        if (graph === null) { // resetting the timer
             clearInterval(graphBuildTimerId);
         } else if (queue.length !== 0) {
             findPath();
@@ -352,10 +355,8 @@ function doBFS() {
 function showPath() {
     $(".path-edge").removeClass("shortest").attr("class", "edge-path"); // make all black again
     $(".node").css("stroke", "white").css("stroke-width", "2px");
-    $("#node-"+nodes[start].name).css("stroke", "#006400").css("stroke-width", "4px");
+    $("#node-"+nodes[start].name).css("stroke", "#ff6666").css("stroke-width", "4px"); // visited
     $("#node-"+nodes[end].name).css("stroke", "#ffa500").css("stroke-width", "4px");
-    var controlsCard = $("#controls-card");
-
     $(".alert").remove();
 
     if (marked[end]) {
