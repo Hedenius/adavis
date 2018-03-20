@@ -1,8 +1,3 @@
-const DEFAULT_SPEED_MS = 100;
-const DEFAULT_DATA_SIZE = 50;
-
-const MAX_DATA_SIZE = 100;
-
 var width = $("#content-card").width();
 var height = 250;
 
@@ -34,21 +29,20 @@ $("#btn-sort").click(actionButton);
  * on the current state of the button.
  */
 function actionButton() {
-    if (validateUserInput()) {
-        if ($("#btn-sort").html() === "Sort") {
+    if ($("#btn-sort").html() === "Sort") {
+        if (validateUserInput()) {
             $("#btn-sort").html("Abort");
             startMergeSort();
-        } else if ($("#btn-sort").html() === "Abort") {
-            $("#btn-sort").html("Sort");
-            speed = DEFAULT_SPEED_MS;
-            clearInterval(interval)
         }
+    } else if ($("#btn-sort").html() === "Abort") {
+        $("#btn-sort").html("Sort");
+        speed = DEFAULT_SPEED_MS;
+        clearInterval(interval)
     }
 }
 
 function startMergeSort() {
     actions = [];
-    items = randomArray(dataSize);
 
     dataset = createDataset(items);
     dataCopy = dataset.slice(0);
@@ -59,7 +53,7 @@ function startMergeSort() {
 
     mergeSort(dataset);
 
-    animateActions(actions)
+    animateActions(actions);
 }
 
 function animateActions(actions) {
@@ -144,6 +138,7 @@ function animateActions(actions) {
                 break;
         }
         if (actions.length === 0) {
+            setSortedString();
             speed = DEFAULT_SPEED_MS;
             clearInterval(interval);
             $("#btn-sort").html("Sort");
@@ -224,45 +219,4 @@ function merge(dataset, low, mid, high) {
         mid: mid,
         high: high - 1,
     });
-}
-
-function validateUserInput() {
-    var res = true;
-
-    var userInput = $("#user-input").val();
-    var userSpeed = $("#user-speed").val();
-
-    if (userInput === "") {
-        dataSize = DEFAULT_DATA_SIZE;
-        $("#user-input").removeClass("is-invalid");
-    }
-
-    if (userSpeed === "") {
-        speed = DEFAULT_SPEED_MS;
-        $("#user-speed").removeClass("is-invalid");
-    }
-
-    if (userInput !== "") {
-        if (userInput > MAX_DATA_SIZE) {
-            $("#user-input").addClass("is-invalid");
-            res = false;
-        }
-        else {
-            dataSize = userInput;
-            $("#user-input").removeClass("is-invalid");
-        }
-    }
-
-    if (userSpeed !== "") {
-        if (userSpeed < 0) {
-            $("#user-speed").addClass("is-invalid");
-            res = false;
-        }
-        else {
-            speed = userSpeed;
-            $("#user-speed").removeClass("is-invalid");
-        }
-    }
-
-    return res;
 }

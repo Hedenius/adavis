@@ -1,11 +1,8 @@
 var width = $("#content-card").width();
 var height = 250;
-var color_default = "#6A6BCD";
-var color_highlight = "#C24787";
 var dataset;
 var svg;
-const defaultSpeed = 100;
-var speed = defaultSpeed;
+var speed = DEFAULT_SPEED_MS;
 var actions = [];
 var items = [];
 var dataCopy;
@@ -32,11 +29,13 @@ $("#btn-sort").click(actionButton);
  */
 function actionButton() {
     if($("#btn-sort").html() === "Sort") {
-        $("#btn-sort").html("Abort");
-        initSort();
+        if (validateUserInput()) {
+            $("#btn-sort").html("Abort");
+            initSort();
+        }
     } else if($("#btn-sort").html() === "Abort") {
         $("#btn-sort").html("Sort");
-        speed = defaultSpeed;
+        speed = DEFAULT_SPEED_MS;
         clearInterval(interval)
     }
 }
@@ -47,23 +46,15 @@ function actionButton() {
 function initSort() {
     actions = [];
 
-    var userArray = $("#user-input").val();
-    if(userArray === "") {
-        items = randomArray(50);
-    } else {
-        items = userArray.split(",").map(Number);
-        items = shuffle(items);
-    }
-    scale = d3.scaleLinear().domain([0, d3.max(items)]).range([0, height]);
     dataset = createDataset(items);
-    setRects(dataset);
     dataCopy = dataset.slice(0);
 
-    var userSpeed = $("#user-speed").val();
-    if(userSpeed !== "") {
-        speed = userSpeed;
-    }
+    scale = d3.scaleLinear().domain([0, d3.max(items)]).range([0, height]);
+
+    setRects(dataset);
+
     var result = quickSort(dataset, 0, dataset.length - 1);
+
     runActions();
 }
 
@@ -139,23 +130,11 @@ function runActions() {
             console.log(dataCopy);
             redrawRects(dataCopy);
             setSortedString();
-            speed = defaultSpeed;   
+            speed = DEFAULT_SPEED_MS;
             clearInterval(interval);
             $("#btn-sort").html("Sort");
         }
     }, speed);
-}
-
-/**
- * Displays the sorted array as a string, for fun.
- */
-function setSortedString() {
-    var output = String(dataset[0].num);
-    for(var i = 1; i < dataset.length; i++) {
-        output = output.concat(",");
-        output = output.concat(dataset[i].num);
-    }
-    $("#user-input").val(output);
 }
 
 /**
