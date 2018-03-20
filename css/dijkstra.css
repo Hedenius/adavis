@@ -25,7 +25,7 @@ html, body {
 }
 
 .shortest {
-    stroke: #b2b200;
+    stroke: #ffa500;
 }
 
 marker {
@@ -49,14 +49,6 @@ circle {
     font: 8px sans-serif;
     stroke: white;
 }
-
-/*#graph {*/
-    /*position: fixed;*/
-    /*left: 0px;*/
-    /*right: 0px;*/
-    /*top: 0px;*/
-    /*bottom: 0px;*/
-/*}*/
 
 text {
     font: 10px sans-serif;

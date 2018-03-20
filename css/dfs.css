@@ -13,19 +13,19 @@ html, body {
 }
 
 .visited {
-    fill: #32cd32;
+    fill: #005b96;
 }
 
 .active {
-    fill: #228b22;
+    fill: #03396c;
 }
 
 .covered {
-    stroke: black;
+    stroke: #011f4b;
 }
 
 .path-edge {
-    stroke: #ffa500;
+    stroke: #8b0000;
 }
 
 circle {

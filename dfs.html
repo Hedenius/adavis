@@ -2,9 +2,139 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Adavis</title>
+
+    <link href="css/dfs.css" type="text/css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container">
+        <a class="navbar-brand" href="#" style="font-size: 2em; font-family: Ubuntu"><img src="img/brand.png">Adavis</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topnavContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="topnavContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main role="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 pt-4">
+                <div class="list-group">
+                    <span data-toggle="collapse" data-target="#algorithms" class="list-group-item bg-light">Sorting</span>
+                    <div class="collapse" id="algorithms">
+                        <a href="selection.html" class="list-group-item">Selection Sort</a>
+                        <a href="quick.html" class="list-group-item">Quicksort</a>
+                        <a href="mergesort.html" class="list-group-item">Mergesort</a>
+                    </div>
+
+                    <span data-toggle="collapse" data-target="#datastructures" class="list-group-item bg-light">Graphs</span>
+                    <div class="collapse" id="datastructures">
+                        <a href="dijkstra.html" class="list-group-item">Dijkstra</a>
+                        <a href="bfs.html" class="list-group-item">BFS</a>
+                        <a href="dfs.html" class="list-group-item active">DFS</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="row flex-column-reverse flex-lg-row">
+                    <div class="col-lg-8 pt-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Depth-First Search (DFS)
+                            </div>
+                            <div class="card-body">
+                                <div id="graph"></div>
+                            </div>
+                        </div>
+
+                        <div class="container pt-4">
+                            <h3>Depth-First Search</h3>
+                            <p>
+                                Depth-first search (DFS) is an algorithm for traversing or searching tree or graph data structures.
+                                One starts at the root (selecting some arbitrary node as the root in the case of a graph) and explores as far as
+                                possible along each branch before backtracking.
+                            </p>
+                            <p>
+                                A version of depth-first search was investigated in the 19th century by French mathematician Charles Pierre Trémaux
+                                as a strategy for solving mazes.
+                            </p>
+                            <p>
+                                The time and space analysis of DFS differs according to its application area. In theoretical computer science, DFS is
+                                typically used to traverse an entire graph, and takes time Θ(|V| + |E|), linear in the size of the graph.
+                                In these applications it also uses space O(|V|) in the worst case to store the stack of vertices on the current search
+                                path as well as the set of already-visited vertices. Thus, in this setting, the time and space bounds are the same as for
+                                breadth-first search and the choice of which of these two algorithms to use depends less on their complexity and more on
+                                the different properties of the vertex orderings the two algorithms produce.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 pt-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Controls
+                            </div>
+                            <div class="card-body" id="controls-card">
+
+                                <form class="m-2" id="prepare-graph">
+                                    <div class="form-group">
+                                        <label for="enter-speed-form">Animation speed</label>
+                                        <input type="text" class="form-control" id="enter-speed-form" placeholder="Default is 500 ms">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dropdown-start">Choose start node</label>
+                                        <select class="form-control" id="dropdown-start">
+                                        </select>
+                                    </div>
+                                    <button type="submit" id="find-paths-button" class="btn btn-primary">Find paths</button>
+                                    <button type="button" id="reset-button" class="btn btn-outline-primary m-2">Reset</button>
+                                </form>
+                                <form class="m-2 mt-4" id="show-shortest-path">
+                                    <div class="form-group">
+                                        <label for="dropdown-end">Choose end node</label>
+                                        <select class="form-control" id="dropdown-end">
+                                        </select>
+                                    </div>
+                                    <button type="submit" id="show-path-button" class="btn btn-primary">Show path</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-light py-3 text-center text-muted border-top" style="font-size: 0.75em">
+    <span>Viktor Ekström, Alena Hramyka, Martin Winqvist</span>
+</footer>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/dfs.js"></script>
 
 </body>
 </html>

@@ -15,22 +15,22 @@ const nodes = [
 ];
 
 const edges = [
-    {source: nodes[0], target: nodes[1], weight: 85}, // A -- B
-    {source: nodes[0], target: nodes[2], weight: 217}, // A -- C
-    {source: nodes[0], target: nodes[4], weight: 173}, // A -- D
-    {source: nodes[1], target: nodes[10], weight: 73}, // B
-    {source: nodes[1], target: nodes[4], weight: 2}, // B
-    {source: nodes[2], target: nodes[3], weight: 186}, // C -- G
-    {source: nodes[2], target: nodes[7], weight: 103}, // C -- E
-    {source: nodes[3], target: nodes[7], weight: 183}, // D
-    {source: nodes[4], target: nodes[5], weight: 502}, // D
-    {source: nodes[5], target: nodes[8], weight: 250}, // F
-    {source: nodes[5], target: nodes[11], weight: 217}, // F
+    {source: nodes[0], target: nodes[1], weight: 85},
+    {source: nodes[0], target: nodes[2], weight: 217},
+    {source: nodes[0], target: nodes[4], weight: 173},
+    {source: nodes[1], target: nodes[10], weight: 73},
+    {source: nodes[1], target: nodes[4], weight: 2},
+    {source: nodes[2], target: nodes[3], weight: 186},
+    {source: nodes[2], target: nodes[7], weight: 103},
+    {source: nodes[3], target: nodes[7], weight: 183},
+    {source: nodes[4], target: nodes[5], weight: 502},
+    {source: nodes[5], target: nodes[8], weight: 250},
+    {source: nodes[5], target: nodes[11], weight: 217},
     {source: nodes[6], target: nodes[8], weight: 29},
     {source: nodes[6], target: nodes[9], weight: 5},
-    {source: nodes[7], target: nodes[9], weight: 167}, // H
+    {source: nodes[7], target: nodes[9], weight: 167},
     {source: nodes[7], target: nodes[6], weight: 73},
-    {source: nodes[9], target: nodes[0], weight: 40}, // J
+    {source: nodes[9], target: nodes[0], weight: 40},
     {source: nodes[9], target: nodes[5], weight: 70},
     {source: nodes[9], target: nodes[8], weight: 18},
     {source: nodes[10], target: nodes[2], weight: 870},
@@ -54,8 +54,6 @@ var enterSpeedField = $("#enter-speed-form");
 var dropdownStart = $("#dropdown-start");
 var dropdownEnd = $("#dropdown-end");
 
-var graphBuildTimerId;
-
 
 initControls();
 initSVG();
@@ -65,13 +63,18 @@ window.addEventListener("resize", function() {
 });
 
 function reset() {
-    if (graphBuildTimerId !== null) {
-        clearInterval(graphBuildTimerId);
-        graphBuildTimerId = null;
-    }
-
-    initControls();
+    distTo = [];
+    edgeTo = new Array(nodes.length);
+    edgeToIndexes = new Array(nodes.length);
+    graph = null;
+    cleanControls();
     initSVG();
+}
+
+function cleanControls() {
+    $(".alert").remove();
+    enableFindPaths();
+    disableShowPaths();
 }
 
 function initControls() {
@@ -89,8 +92,9 @@ function initControls() {
     }
     dropdownEnd.val("M");
 
-    $("#find-paths-button").click(function() {
-        speed = enterSpeedField.val(); // TODO: validate
+    $("#prepare-graph").submit(function(e) {
+        e.preventDefault();
+        speed = enterSpeedField.val();
         if (speed === "") {
             speed = 2000;
         }
@@ -102,7 +106,8 @@ function initControls() {
 
     $("#reset-button").click(reset);
 
-    $("#show-path-button").click(function() {
+    $("#show-shortest-path").submit(function(e) {
+        e.preventDefault();
         end = findI(dropdownEnd.val());
         showPath();
     });
@@ -306,17 +311,21 @@ function doDijkstraMagic() {
         return nodeIndex; // node index from nodes
     }
 
-    graphBuildTimerId = setInterval( function() {
-        if (queueNodes.length !== 0) {
+    var graphBuildTimerId = setInterval( function() {
+        if (graph === null) {
+            clearInterval(graphBuildTimerId);
+        } else if (queueNodes.length !== 0) {
             relax( findMin() );
         } else {
             clearInterval(graphBuildTimerId);
             enableShowPaths();
-            graphBuildTimerId = null;
         }
     }, speed);
 
     function relax(index) {
+        if (graph == null) {
+            return;
+        }
         console.log(index);
 
         var source = nodes[index].name;
@@ -334,7 +343,8 @@ function doDijkstraMagic() {
 
         var counter = 0;
         var pathFindTimedId = setInterval( function () {
-            if (keys !== undefined && counter < keys.length) {
+            if (graph !== null &&
+                keys !== undefined && counter < keys.length) {
 
                 var target = keys[counter];
                 console.log(JSON.stringify("TARGET: " + target));

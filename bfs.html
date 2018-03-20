@@ -6,7 +6,6 @@
 
     <title>Adavis</title>
 
-    <link href="css/reset.css" type="text/css" rel="stylesheet">
     <link href="css/bfs.css" type="text/css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -68,7 +67,7 @@
                         </div>
 
                         <div class="container pt-4">
-                            <h3>DBreadth-First Search</h3>
+                            <h3>Breadth-First Search</h3>
                             <p>
                                 Breadth-first search (BFS) is an algorithm for traversing or searching tree or graph data structures.
                                 It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a 'search key')
@@ -85,23 +84,23 @@
                             </p>
                             <p>
                                 Breadth first traversal is accomplished by enqueueing each level of a tree sequentially as the root of any subtree is encountered.
-                                There are 2 cases in the iterative algorithm.
+                                There are 2 cases in the iterative algorithm:
                             </p>
 
-                            <ul>
-                                <li>
-                                    Root case : The traversal queue is initially empty so the root node must be added before the general case.
+                            <ul style="list-style: decimal inside !important">
+                                <li style="display: list-item !important">
+                                    <strong>Root case</strong>: The traversal queue is initially empty so the root node must be added before the general case.
                                 </li>
-
-                                <li>
-                                    General case: Process any items in the queue, while also expanding their children, stop if the queue was empty.
+                                <li style="display: list-item !important">
+                                    <strong>General case</strong>: Process any items in the queue, while also expanding their children, stop if the queue was empty.
                                     The general case will halt after processing the bottom level as leaf nodes have no children.
                                 </li>
-
                             </ul>
                             <p>
-                                Input: A search problem. A search-problem abstracts out the problem specific requirements from the actual search algorithm.
-                                Output: An ordered list of actions to be followed to reach from start state to the goal state.
+                                <strong>Input</strong>: A <em>search problem</em>. A search-problem abstracts out the problem specific requirements from the actual search algorithm.
+                            </p>
+                            <p>
+                                <strong>Output</strong>: An ordered list of actions to be followed to reach from start state to the goal state.
                             </p>
                         </div>
                     </div>
@@ -123,19 +122,17 @@
                                         <select class="form-control" id="dropdown-start">
                                         </select>
                                     </div>
-                                    <button id="find-paths-button" class="btn btn-primary">Find paths</button>
-                                    <button id="reset-button" class="btn btn-outline-primary m-2">Reset</button>
+                                    <button type="submit" id="find-paths-button" class="btn btn-primary">Find paths</button>
+                                    <button type="button" id="reset-button" class="btn btn-outline-primary m-2">Reset</button>
                                 </form>
-
                                 <form class="m-2 mt-4" id="show-shortest-path">
                                     <div class="form-group">
                                         <label for="dropdown-end">Choose end node</label>
                                         <select class="form-control" id="dropdown-end">
                                         </select>
                                     </div>
-                                    <button id="show-path-button" class="btn btn-primary">Show path</button>
+                                    <button type="submit" id="show-path-button" class="btn btn-primary">Show path</button>
                                 </form>
-
                             </div>
                         </div>
                     </div>
@@ -154,7 +151,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
-<script src="js/dijkstra.js"></script>
+<script src="js/bfs.js"></script>
 
 </body>
 </html>
