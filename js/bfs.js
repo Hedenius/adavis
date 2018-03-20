@@ -38,8 +38,11 @@ const edges = [
     {source: nodes[1], target: nodes[20]},
     {source: nodes[2], target: nodes[3]},
     {source: nodes[2], target: nodes[7]},
+    {source: nodes[2], target: nodes[22]},
     {source: nodes[3], target: nodes[13]},
     {source: nodes[4], target: nodes[5]},
+    {source: nodes[4], target: nodes[0]},
+    {source: nodes[5], target: nodes[9]},
     {source: nodes[5], target: nodes[15]},
     {source: nodes[5], target: nodes[11]},
     {source: nodes[6], target: nodes[8]},
@@ -52,6 +55,8 @@ const edges = [
     {source: nodes[10], target: nodes[2]},
     {source: nodes[10], target: nodes[3]},
     {source: nodes[10], target: nodes[11]},
+    {source: nodes[11], target: nodes[10]},
+    {source: nodes[11], target: nodes[17]},
     {source: nodes[11], target: nodes[25]},
     {source: nodes[12], target: nodes[4]},
     {source: nodes[12], target: nodes[1]},
@@ -78,10 +83,10 @@ const edges = [
     {source: nodes[21], target: nodes[9]},
     {source: nodes[22], target: nodes[2]},
     {source: nodes[22], target: nodes[1]},
+    {source: nodes[23], target: nodes[6]},
     {source: nodes[23], target: nodes[16]},
     {source: nodes[23], target: nodes[18]},
     {source: nodes[24], target: nodes[20]},
-    {source: nodes[24], target: nodes[2]},
     {source: nodes[25], target: nodes[19]},
     {source: nodes[25], target: nodes[21]},
 ];
@@ -206,7 +211,6 @@ function initSVG() {
         .nodes(nodes)
         .links(edges);
 
-    force.linkDistance(height/10);
     force.charge(-(height * 1.5));
 
     var link = svg.selectAll('.link')
